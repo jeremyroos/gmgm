@@ -1,0 +1,25 @@
+Package: gmgm
+Type: Package
+Title: Gaussian Mixture Graphical Model Learning and Inference
+Version: 1.0.1
+Authors@R: c(
+    person("Jérémy", "Roos", email = "jeremy.roos@gmail.com",
+    role = c("aut", "cre", "cph")),
+    person("RATP Group", role = c("fnd", "cph")))
+Description: Gaussian mixture graphical models include Bayesian networks and
+    dynamic Bayesian networks (their temporal extension) whose local probability
+    distributions are described by Gaussian mixture models. They are powerful
+    tools for graphically and quantitatively representing nonlinear dependencies
+    between continuous variables. This package provides a complete framework to
+    create, manipulate, learn the structure and the parameters, and perform
+    inference in these models. Most of the algorithms are described in the PhD
+    thesis of Roos (2018) <https://tel.archives-ouvertes.fr/tel-01943718>.
+Depends: R (>= 3.5.0)
+Imports: dplyr (>= 1.0.0), ggplot2 (>= 3.2.1), purrr (>= 0.3.3),
+    rlang (>= 0.4.6), stats (>= 3.5.0), stringr (>= 1.4.0), tidyr (>= 1.0.0),
+    visNetwork (>= 2.0.8)
+Suggests: testthat (>= 2.3.2)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
