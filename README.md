@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# gmgm <img src='man/figures/logo.png' align="right" height="200" />
+# gmgm <img src="man/figures/logo.png" align="right" height="200" />
 
 <!-- badges: start -->
 
@@ -19,21 +19,70 @@ parameters, and perform inference in these models.
 
 ## Example
 
-This example shows how gmgm can be used to learn the structure and the
-parameters of a Gaussian mixture Bayesian network:
+The following example illustrates how gmgm can be used to learn the
+structure, the parameters and perform inference in a Gaussian mixture
+Bayesian network.
+
+Let’s take the NHANES dataset provided in this package, which includes
+body composition data measured in 2148 adults aged 20 to 59 years in the
+United States. 1848 observations are randomly chosen as the training
+set, while the 300 remaining ones are chosen as the test set. In the
+latter, one-third of the values of each column are randomly removed:
 
 ``` r
 library(gmgm)
 set.seed(0)
 
 data(data_body)
-obs_learn <- sample.int(2148, 1848)
-data_learn <- data_body[obs_learn, ]
+obs_train <- sample.int(2148, 1848)
+data_train <- data_body[obs_train, ]
+data_test <- data_body[setdiff(1:2148, obs_train), ]
 
+data_test_na <- data_test
+data_test_na$GENDER[sample.int(300, 100)] <- NA
+data_test_na$AGE[sample.int(300, 100)] <- NA
+data_test_na$HEIGHT[sample.int(300, 100)] <- NA
+data_test_na$WEIGHT[sample.int(300, 100)] <- NA
+data_test_na$FAT[sample.int(300, 100)] <- NA
+data_test_na$WAIST[sample.int(300, 100)] <- NA
+data_test_na$GLYCO[sample.int(300, 100)] <- NA
+
+print(data_test_na)
+
+#> # A tibble: 300 x 8
+#>       ID GENDER   AGE HEIGHT WEIGHT   FAT WAIST GLYCO
+#>    <int>  <int> <int>  <dbl>  <dbl> <dbl> <dbl> <dbl>
+#>  1 93731      0    NA    NA    NA    31.3 102.    4.9
+#>  2 93758     NA    55   157.   75.8  NA   102.    6.5
+#>  3 93761     NA    44   166.   80.2  31.8  NA     5.8
+#>  4 93811      0    NA   164.   79.6  NA    90.9   5.3
+#>  5 93814      1    41   169.   NA    39.1  90.7   4.6
+#>  6 93824      1    52   159.   72.2  41.1  87.4   5.6
+#>  7 93837      1    NA   167.  109.   48.3  NA    NA  
+#>  8 93841      1    48   172.   96.5  NA    NA    NA  
+#>  9 93849      1    40   165.   61.4  26    84.4   5.2
+#> 10 93926     NA    31    NA    NA    36.9 130.    5.3
+#> # ... with 290 more rows
+```
+
+At first, the Bayesian network is initialized with nodes corresponding
+to the variables of the dataset and no arc:
+
+``` r
 gmbn_init <- add_nodes(NULL,
                        c("AGE", "FAT", "GENDER", "GLYCO", "HEIGHT", "WAIST",
                          "WEIGHT"))
-                         
+
+network(gmbn_init)
+```
+
+<img src="man/figures/network_init.png"/>
+
+Starting from this initial structure, the training set is used to select
+the best subset of arcs (among predefined candidate arcs) and estimate
+the parameters of each local Gaussian mixture model:
+
+``` r
 arcs_cand <- data.frame(from = c("AGE", "GENDER", "HEIGHT", "WEIGHT", NA, "AGE",
                                  "GENDER", "AGE", "FAT", "GENDER", "HEIGHT",
                                  "WEIGHT", "AGE", "GENDER", "HEIGHT"),
@@ -41,12 +90,10 @@ arcs_cand <- data.frame(from = c("AGE", "GENDER", "HEIGHT", "WEIGHT", NA, "AGE",
                                "HEIGHT", "WAIST", "WAIST", "WAIST", "WAIST",
                                "WAIST", "WEIGHT", "WEIGHT", "WEIGHT"))
                                   
-res_learn <- struct_learn(gmbn_init, data_learn, arcs_cand = arcs_cand,
+res_learn <- struct_learn(gmbn_init, data_train, arcs_cand = arcs_cand,
                           verbose = TRUE, max_comp = 3, max_rank = 1,
                           regul = 0.01, max_iter_em = 100)
-```
 
-``` r
 #> node AGE    bic_old = -1604165.22026861    bic_new = -6936.35703030545
 #> node FAT    bic_old = -1101157.27026861    bic_new = -5240.27043715568
 #> node GENDER    bic_old = -2188.72026861444    bic_new = 7570.83224030922
@@ -56,31 +103,64 @@ res_learn <- struct_learn(gmbn_init, data_learn, arcs_cand = arcs_cand,
 #> node WEIGHT    bic_old = -6366683.95526861    bic_new = -7942.70714135656
 ```
 
-The learned structure is displayed as follows:
+The final structure contains 11 arcs:
 
 ``` r
 network(res_learn$gmgm)
 ```
 
-<img src='man/figures/network.png' />
+<img src="man/figures/network_learn.png"/>
 
-Then the model can be used to perform inference:
+If we focus for example on the variable WEIGHT, we can see that it
+directly depends on the variable HEIGHT. In the related local Gaussian
+mixture model, an optimal number of two mixture components has been
+selected:
 
 ``` r
-data_infer <- data_body[setdiff(1:2148, obs_learn), ]
-data_infer$GENDER[sample.int(300, 100)] <- NA
-data_infer$AGE[sample.int(300, 100)] <- NA
-data_infer$HEIGHT[sample.int(300, 100)] <- NA
-data_infer$WEIGHT[sample.int(300, 100)] <- NA
-data_infer$FAT[sample.int(300, 100)] <- NA
-data_infer$WAIST[sample.int(300, 100)] <- NA
-data_infer$GLYCO[sample.int(300, 100)] <- NA
+print(res_learn$gmgm$WEIGHT)
 
-infer <- inference(res_learn$gmgm, data_infer)
-print(infer)
+#> $alpha
+#> [1] 0.6200512 0.3799488
+#> 
+#> $mu
+#>             [,1]     [,2]
+#> WEIGHT  70.78853  96.3321
+#> HEIGHT 165.24341 168.4551
+#> 
+#> $sigma
+#> $sigma[[1]]
+#>           WEIGHT   HEIGHT
+#> WEIGHT 169.32464 57.37758
+#> HEIGHT  57.37758 84.23874
+#> 
+#> $sigma[[2]]
+#>           WEIGHT   HEIGHT
+#> WEIGHT 395.43744 64.55256
+#> HEIGHT  64.55256 86.69264
+#> 
+#> 
+#> attr(,"class")
+#> [1] "gmm"
 ```
 
+Graphically, we observe that these mixture components fit well with the
+training data:
+
 ``` r
+ellipses(res_learn$gmgm$WEIGHT, data = data_train)
+```
+
+<img src="man/figures/ellipses.png"/>
+
+Now that the Bayesian network has been learned, it can be used to
+perform inference on the test set, which allows to fill in the missing
+values:
+
+``` r
+data_infer <- inference(res_learn$gmgm, data_test_na)
+
+print(data_infer)
+
 #> # A tibble: 300 x 7
 #>      AGE   FAT  GENDER GLYCO HEIGHT WAIST WEIGHT
 #>    <dbl> <dbl>   <dbl> <dbl>  <dbl> <dbl>  <dbl>
@@ -95,4 +175,18 @@ print(infer)
 #>  9  40    26.  1        5.2    165.  84.4   61.4
 #> 10  31.   36.9 0.00688  5.3    174. 130.   128. 
 #> # ... with 290 more rows
+```
+
+Focusing back on the variable WEIGHT, the values have been filled in
+with a mean absolute percentage error (MAPE) of 10.2%:
+
+``` r
+pred_weight <- data_infer$WEIGHT[is.na(data_test_na$WEIGHT)]
+actual_weight <- data_test$WEIGHT[is.na(data_test_na$WEIGHT)]
+
+mape <- mean(abs(pred_weight - actual_weight) / actual_weight)
+
+print(mape)
+
+#> [1] 0.101956
 ```

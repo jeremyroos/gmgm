@@ -1,3 +1,7 @@
+## gmgm (development version)
+
+* Provided a more detailed example in the README file.
+
 ## gmgm 1.0.1
 
 * Removed a unit test of function `em` that failed with some BLAS/LAPACK
