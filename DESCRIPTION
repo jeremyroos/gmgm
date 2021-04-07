@@ -1,7 +1,7 @@
 Package: gmgm
 Type: Package
 Title: Gaussian Mixture Graphical Model Learning and Inference
-Version: 1.0.1
+Version: 1.0.1.9000
 Authors@R: c(
     person("Jérémy", "Roos", email = "jeremy.roos@gmail.com",
     role = c("aut", "cre", "cph")),
