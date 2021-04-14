@@ -88,15 +88,21 @@ gmm <- function(alpha, mu, sigma, var = rownames(mu)) {
       stop()
   }
 
-  sum_alpha <- alpha %>%
-    sum()
+  if (n_comp == 1) {
+    alpha <- 1
+  } else {
+    alpha <- alpha %>%
+      unname()
+    sum_alpha <- alpha %>%
+      sum()
 
-  if (abs(sum_alpha - 1) > .Machine$double.eps) {
-    alpha <- alpha / sum_alpha
+    if (abs(sum_alpha - 1) > .Machine$double.eps) {
+      alpha <- alpha / sum_alpha
 
-    if (any(alpha <= 0)) {
-      "alpha has non-positive elements" %>%
-        stop()
+      if (any(alpha <= 0)) {
+        "alpha has non-positive elements" %>%
+          stop()
+      }
     }
   }
 
@@ -204,16 +210,16 @@ gmm <- function(alpha, mu, sigma, var = rownames(mu)) {
       stop()
   }
 
-  alpha <- alpha %>%
-    unname()
-  dimnames(mu) <- var %>%
-    list()
+  mu <- mu %>%
+    as.numeric() %>%
+    matrix(n_var, dimnames = list(var))
   dimnames_sigma <- var %>%
     list(var)
   sigma <- sigma %>%
     map(function(sigma) {
-      dimnames(sigma) <- dimnames_sigma
       sigma %>%
+        as.numeric() %>%
+        matrix(n_var, dimnames = dimnames_sigma) %>%
         return()
     }) %>%
     unname()
