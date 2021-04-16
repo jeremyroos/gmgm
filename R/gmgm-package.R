@@ -60,4 +60,4 @@
 NULL
 
 globalVariables(c(".", "comp", "from", "from_lag", "from_new", "movable", "to",
-                  "var_x", "var_y"))
+                  "var_x", "var_y", "where"))

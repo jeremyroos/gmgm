@@ -15,8 +15,8 @@ Description: Gaussian mixture graphical models include Bayesian networks and
     inference in these models. Most of the algorithms are described in the PhD
     thesis of Roos (2018) <https://tel.archives-ouvertes.fr/tel-01943718>.
 Depends: R (>= 3.5.0)
-Imports: dplyr (>= 1.0.0), ggplot2 (>= 3.2.1), purrr (>= 0.3.3),
-    rlang (>= 0.4.6), stats (>= 3.5.0), stringr (>= 1.4.0), tidyr (>= 1.0.0),
+Imports: dplyr (>= 1.0.5), ggplot2 (>= 3.2.1), purrr (>= 0.3.3),
+    rlang (>= 0.4.10), stats (>= 3.5.0), stringr (>= 1.4.0), tidyr (>= 1.0.0),
     visNetwork (>= 2.0.8)
 Suggests: testthat (>= 2.3.2)
 License: GPL-3

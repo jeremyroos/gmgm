@@ -125,7 +125,7 @@ aggregation <- function(part, nodes, col_seq = NULL, col_weight = "weight",
   }
 
   seq <- part %>%
-    select_at(col_seq)
+    select(all_of(col_seq))
 
   if (any(!(map_chr(seq, mode) %in% c("numeric", "character", "logical")))) {
     "columns of part[col_seq] have invalid types" %>%
@@ -221,9 +221,9 @@ aggregation <- function(part, nodes, col_seq = NULL, col_weight = "weight",
       }
 
       part %>%
-        mutate_at(nodes_aggreg, ~ . * !!sym(col_weight)) %>%
-        group_by_at(col_seq) %>%
-        summarise_at(nodes_aggreg, ~ sum(.) / sum(!!sym(col_weight))) %>%
+        mutate(across(nodes_aggreg, ~ . * !!sym(col_weight))) %>%
+        group_by(across(col_seq)) %>%
+        summarise(across(nodes_aggreg, ~ sum(.) / sum(!!sym(col_weight)))) %>%
         ungroup() %>%
         set_names(c(col_seq, str_remove(nodes_aggreg, "\\.[1-9][0-9]*$"))) %>%
         bind_rows(aggreg_0, .) %>%

@@ -87,9 +87,9 @@ BIC.gmbn <- function(object, data, col_seq = NULL, ...) {
     .$lag %>%
     max(0)
   log_n_obs <- data %>%
-    group_by_at(col_seq) %>%
+    group_by(across(col_seq)) %>%
     summarise(!!col_n := n(), .groups = "drop") %>%
-    mutate_at(col_n, ~ pmax(. - max_lag, 0)) %>%
+    mutate(across(col_n, ~ pmax(. - max_lag, 0))) %>%
     .[[col_n]] %>%
     sum() %>%
     log()
@@ -127,13 +127,14 @@ BIC.gmdbn <- function(object, data, col_seq = NULL, ...) {
   col_diff <- prefix %>%
     str_c("diff")
   n_obs_gmbn <- data %>%
-    group_by_at(col_seq) %>%
+    group_by(across(col_seq)) %>%
     summarise(!!col_n := n(), .groups = "drop") %>%
     crossing(tibble(!!col_time := times_gmbn - 1,
                     !!col_diff := c(diff(times_gmbn), Inf))) %>%
-    mutate_at(col_n, ~ pmin(!!sym(col_diff), pmax(0, . - !!sym(col_time)))) %>%
-    group_by_at(col_time) %>%
-    summarise_at(col_n, sum)
+    mutate(across(col_n,
+                  ~ pmin(!!sym(col_diff), pmax(0, . - !!sym(col_time))))) %>%
+    group_by(across(col_time)) %>%
+    summarise(across(col_n, sum))
   local <- loglik$local %>%
     list(summ$local, n_obs_gmbn[[col_n]]) %>%
     pmap(function(loglik, summ, n_obs) {
