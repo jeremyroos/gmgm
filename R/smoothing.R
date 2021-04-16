@@ -111,7 +111,7 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
   }
 
   seq <- evid %>%
-    select_at(col_seq) %>%
+    select(all_of(col_seq)) %>%
     as_tibble()
 
   if (any(!(map_chr(seq, mode) %in% c("numeric", "character", "logical")))) {
@@ -226,8 +226,7 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
 
       if (n_nodes < n_nodes_gmdbn) {
         nodes_obs <- evid %>%
-          select_if(col_evid %in% nodes_gmdbn) %>%
-          select_if(~ !any(is.na(.))) %>%
+          select(any_of(nodes_gmdbn) & where(~ !any(is.na(.)))) %>%
           colnames()
         blanket <- nodes
         blanket_miss <- blanket[!(blanket %in% nodes_obs)]
@@ -278,9 +277,9 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
 
       if (n_prop >= 0) {
         col_prop <- col_prop %>%
-          c(nodes_gmdbn,
-            str_c(rep(str_c(nodes_gmdbn, "."), n_prop),
-                  rep(seq_len(n_prop), each = n_nodes_gmdbn)))
+          c(str_c(rep(str_c(nodes_gmdbn, "."), n_prop),
+                  rep(rev(seq_len(n_prop)), each = n_nodes_gmdbn)),
+            nodes_gmdbn)
       }
 
       col_smooth <- col_seq %>%
@@ -290,7 +289,7 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
       col_time <- prefix %>%
         str_c("time")
       evid <- evid %>%
-        select_if(col_evid %in% col_evid_prop)
+        select(any_of(col_evid_prop))
       list_part <- list()
       times_gmbn <- gmdbn %>%
         names() %>%
@@ -300,12 +299,12 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
       time_gmbn <- 1
       i_gmbn <- 1
       n_times_seq <- seq %>%
-        group_by_at(col_seq) %>%
+        group_by(across(col_seq)) %>%
         summarise(!!col_n := n(), .groups = "drop")
       n_sub <- (nrow(n_times_seq) * n_part - 1) %/% max_part_sim + 1
       smooth <- n_times_seq %>%
         mutate(!!col_sub := ntile(!!sym(col_n), n_sub)) %>%
-        group_by_at(col_sub) %>%
+        group_by(across(col_sub)) %>%
         group_map(function(n_times_seq, sub) {
           if (verbose) {
             verb <- "subset " %>%
@@ -317,7 +316,7 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
           }
 
           seq <- n_times_seq %>%
-            select_at(col_seq)
+            select(all_of(col_seq))
 
           if (n_sub > 1) {
             evid <- seq %>%
@@ -337,7 +336,7 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
             }
 
             evid_time <- evid %>%
-              group_by_at(col_seq) %>%
+              group_by(across(col_seq)) %>%
               slice(time) %>%
               ungroup()
             part <- part %>%
@@ -349,7 +348,7 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
             }
 
             part <- part %>%
-              select_if(colnames(.) %in% col_prop)
+              select(any_of(col_prop))
 
             if (time == time_gmbn) {
               gmbn <- gmdbn[[i_gmbn]]
@@ -361,11 +360,11 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
               propagation(gmbn, evid_time, col_seq = col_seq,
                           col_weight = col_weight, min_ess = min_ess)
             list_part <- list_part %>%
-              c(list(select_at(part, col_part)))
+              c(list(select(part, all_of(col_part))))
           }
 
           n_times_seq %>%
-            group_by_at(col_n) %>%
+            group_by(across(col_n)) %>%
             group_map(function(seq, n) {
               max_time <- n[[col_n]]
               part <- list_part[[max_time]]
@@ -378,21 +377,21 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
               weights <- part[[col_weight]]
               list_aggreg <- list()
               list_aggreg[[max_time]] <- part %>%
-                select_at(col_smooth)
+                select(all_of(col_smooth))
 
               for (time in rev(seq_len(max_time - 1))) {
                 part <- list_part[[time]] %>%
                   slice(part[[col_draw]])
                 list_aggreg[[time]] <- part %>%
-                  select_at(col_smooth)
+                  select(all_of(col_smooth))
               }
 
               list_aggreg %>%
                 map(function(part) {
                   part %>%
-                    mutate_at(nodes, ~ . * weights) %>%
-                    group_by_at(col_seq) %>%
-                    summarise_at(nodes, sum) %>%
+                    mutate(across(nodes, ~ . * weights)) %>%
+                    group_by(across(col_seq)) %>%
+                    summarise(across(nodes, sum)) %>%
                     ungroup() %>%
                     return()
                 }) %>%
@@ -403,15 +402,15 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
             return()
         }) %>%
         bind_rows() %>%
-        group_by_at(col_seq) %>%
+        group_by(across(col_seq)) %>%
         mutate(!!col_time := seq_len(n())) %>%
         ungroup()
       smooth <- seq %>%
-        group_by_at(col_seq) %>%
+        group_by(across(col_seq)) %>%
         mutate(!!col_time := seq_len(n())) %>%
         ungroup() %>%
         inner_join(smooth, by = c(col_seq, col_time)) %>%
-        select_at(col_smooth)
+        select(all_of(col_smooth))
     }
   }
 

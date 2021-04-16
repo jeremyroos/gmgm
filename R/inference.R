@@ -61,10 +61,8 @@ inference <- function(gmbn, evid, nodes = names(gmbn), n_part = 1000,
 
   evid <- evid %>%
     ungroup()
-  col_evid <- evid %>%
-    colnames()
 
-  if (any(duplicated(col_evid))) {
+  if (any(duplicated(colnames(evid)))) {
     "evid has duplicated column names" %>%
       stop()
   }
@@ -169,12 +167,12 @@ inference <- function(gmbn, evid, nodes = names(gmbn), n_part = 1000,
     }
 
     evid <- evid %>%
-      select_if(col_evid %in% nodes_gmbn)
+      select(any_of(nodes_gmbn))
 
     if (n_nodes < length(nodes_gmbn)) {
       arcs <- struct$arcs
       nodes_obs <- evid %>%
-        select_if(~ !any(is.na(.))) %>%
+        select(where(~ !any(is.na(.)))) %>%
         colnames()
       blanket <- nodes
       blanket_miss <- blanket[!(blanket %in% nodes_obs)]
@@ -199,7 +197,7 @@ inference <- function(gmbn, evid, nodes = names(gmbn), n_part = 1000,
       nodes_gmbn <- gmbn %>%
         names()
       evid <- evid %>%
-        select_if(colnames(.) %in% nodes_gmbn)
+        select(any_of(nodes_gmbn))
     }
 
     prefix <- nodes_gmbn %>%
@@ -215,7 +213,7 @@ inference <- function(gmbn, evid, nodes = names(gmbn), n_part = 1000,
     infer <- evid %>%
       mutate(!!col_seq := seq_len(n()),
              !!col_sub := ntile(!!sym(col_seq), n_sub)) %>%
-      group_by_at(col_sub) %>%
+      group_by(across(col_sub)) %>%
       group_map(function(evid, sub) {
         if (verbose) {
           "subset " %>%
@@ -224,12 +222,12 @@ inference <- function(gmbn, evid, nodes = names(gmbn), n_part = 1000,
         }
 
         evid %>%
-          select_at(col_seq) %>%
+          select(all_of(col_seq)) %>%
           particles(col_weight = col_weight, n_part = n_part) %>%
           propagation(gmbn, evid, col_seq = col_seq,
                       col_weight = col_weight) %>%
           aggregation(nodes, col_seq = col_seq, col_weight = col_weight) %>%
-          select_at(nodes) %>%
+          select(all_of(nodes)) %>%
           return()
       }) %>%
       bind_rows()

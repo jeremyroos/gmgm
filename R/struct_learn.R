@@ -347,16 +347,16 @@ struct_learn <- function(gmgm, data, nodes = structure(gmgm)$nodes,
       distinct(from, lag) %>%
       mutate(from_lag = str_c(from, ".", lag))
     data <- data %>%
-      select_at(c(col_seq, nodes_gmgm))
+      select(all_of(c(col_seq, nodes_gmgm)))
     data <- arcs_max_lag %>%
       group_by(lag) %>%
       group_map(function(arcs, lag) {
         from <- arcs$from
         data %>%
-          group_by_at(col_seq) %>%
-          mutate_at(from, list(~ lag(., lag$lag))) %>%
+          group_by(across(col_seq)) %>%
+          mutate(across(from, ~ lag(., lag$lag))) %>%
           ungroup() %>%
-          select_at(from) %>%
+          select(all_of(from)) %>%
           set_names(arcs$from_lag) %>%
           return()
       }) %>%
@@ -364,13 +364,13 @@ struct_learn <- function(gmgm, data, nodes = structure(gmgm)$nodes,
 
     if (max_lag > 0) {
       data <- data %>%
-        group_by_at(col_seq) %>%
+        group_by(across(col_seq)) %>%
         slice(- seq_len(max_lag)) %>%
         ungroup()
     }
 
     data <- data %>%
-      select_at(c(nodes_gmgm, arcs_max_lag$from_lag)) %>%
+      select(all_of(c(nodes_gmgm, arcs_max_lag$from_lag))) %>%
       as.matrix()
     nodes_learn <- character()
     nodes_pend <- nodes_gmgm
@@ -650,7 +650,7 @@ struct_learn <- function(gmgm, data, nodes = structure(gmgm)$nodes,
 
         time_start <- time_gmbn - max_lag
         data <- data %>%
-          group_by_at(col_seq)
+          group_by(across(col_seq))
 
         if (i_gmbn < n_gmbn) {
           data <- data %>%

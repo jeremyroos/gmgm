@@ -112,9 +112,13 @@ particles <- function(seq = NULL, col_weight = "weight", n_part = 1000) {
       stop()
   }
 
+  if (length(col_seq) > 0) {
+    seq <- seq %>%
+      distinct() %>%
+      arrange(across(everything()))
+  }
+
   seq %>%
-    distinct() %>%
-    arrange_all() %>%
     uncount(n_part) %>%
     mutate(!!col_weight := 1 / n_part) %>%
     return()

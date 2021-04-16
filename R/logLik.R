@@ -160,16 +160,16 @@ logLik.gmbn <- function(object, data, col_seq = NULL, ...) {
     distinct(from, lag) %>%
     mutate(from_lag = str_c(from, ".", lag))
   data <- data %>%
-    select_at(c(col_seq, nodes))
+    select(all_of(c(col_seq, nodes)))
   data <- arcs_lag %>%
     group_by(lag) %>%
     group_map(function(arcs, lag) {
       from <- arcs$from
       data %>%
-        group_by_at(col_seq) %>%
-        mutate_at(from, list(~ lag(., lag$lag))) %>%
+        group_by(across(col_seq)) %>%
+        mutate(across(from, ~ lag(., lag$lag))) %>%
         ungroup() %>%
-        select_at(from) %>%
+        select(all_of(from)) %>%
         set_names(arcs$from_lag) %>%
         return()
     }) %>%
@@ -177,13 +177,13 @@ logLik.gmbn <- function(object, data, col_seq = NULL, ...) {
 
   if (nrow(arcs_lag) > 0) {
     data <- data %>%
-      group_by_at(col_seq) %>%
+      group_by(across(col_seq)) %>%
       slice(- seq_len(max(arcs_lag$lag))) %>%
       ungroup()
   }
 
   data <- data %>%
-    select_at(c(nodes, arcs_lag$from_lag)) %>%
+    select(all_of(c(nodes, arcs_lag$from_lag))) %>%
     as.matrix()
   local <- object %>%
     imap_dbl(function(gmm, node) {
@@ -262,7 +262,7 @@ logLik.gmdbn <- function(object, data, col_seq = NULL, ...) {
     pmap(function(gmbn, arcs, i_gmbn) {
       time_start <- times_gmbn[i_gmbn] - max(arcs$lag, 0)
       data <- data %>%
-        group_by_at(col_seq)
+        group_by(across(col_seq))
 
       if (i_gmbn < n_gmbn) {
         data <- data %>%

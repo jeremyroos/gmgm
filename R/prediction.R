@@ -126,7 +126,7 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
   }
 
   seq <- evid %>%
-    select_at(col_seq) %>%
+    select(all_of(col_seq)) %>%
     as_tibble()
 
   if (any(!(map_chr(seq, mode) %in% c("numeric", "character", "logical")))) {
@@ -213,7 +213,7 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
   col_time <- prefix %>%
     str_c("time")
   seq_time <- seq %>%
-    group_by_at(col_seq) %>%
+    group_by(across(col_seq)) %>%
     mutate(!!col_time := seq_len(n())) %>%
     ungroup()
   col_seq_time <- col_seq %>%
@@ -223,8 +223,8 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
 
   if (length(gmdbn) == 1) {
     evid_pred <- evid_pred %>%
-      select_if(col_evid_pred %in% col_evid_prop) %>%
-      group_by_at(col_seq) %>%
+      select(any_of(col_evid_prop)) %>%
+      group_by(across(col_seq)) %>%
       mutate(!!col_time := seq_len(n())) %>%
       ungroup() %>%
       left_join(seq_time, ., by = col_seq_time)
@@ -234,8 +234,8 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
     pred <- horizon %>%
       map(function(horizon) {
         infer %>%
-          group_by_at(col_seq) %>%
-          mutate_at(nodes, ~ lag(lead(., horizon - 1), horizon - 1)) %>%
+          group_by(across(col_seq)) %>%
+          mutate(across(nodes, ~ lag(lead(., horizon - 1), horizon - 1))) %>%
           ungroup() %>%
           return()
       })
@@ -273,7 +273,7 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
       str_c("n")
     min_hor <- horizon[1]
     n_times_seq <- seq %>%
-      group_by_at(col_seq) %>%
+      group_by(across(col_seq)) %>%
       summarise(!!col_n := n(), .groups = "drop")
 
     if (max(n_times_seq[[col_n]], 0) < min_hor) {
@@ -362,17 +362,15 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
 
       if (n_nodes < n_nodes_gmdbn) {
         nodes_obs_evid <- evid %>%
-          select_if(col_evid %in% nodes_gmdbn) %>%
-          select_if(~ !any(is.na(.))) %>%
+          select(any_of(nodes_gmdbn) & where(~ !any(is.na(.)))) %>%
           colnames()
         nodes_obs <- evid_pred %>%
-          select_if(col_evid_pred %in% col_evid_prop) %>%
-          group_by_at(col_seq) %>%
+          select(any_of(col_evid_prop)) %>%
+          group_by(across(col_seq)) %>%
           mutate(!!col_time := seq_len(n())) %>%
           ungroup() %>%
           left_join(seq_time, ., by = col_seq_time) %>%
-          select_if(colnames(.) %in% nodes_gmdbn) %>%
-          select_if(~ !any(is.na(.))) %>%
+          select(any_of(nodes_gmdbn) & where(~ !any(is.na(.)))) %>%
           colnames() %>%
           intersect(nodes_obs_evid)
         blanket <- nodes
@@ -416,15 +414,15 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
 
       if (n_prop >= 0) {
         col_prop <- col_prop %>%
-          c(nodes_gmdbn,
-            str_c(rep(str_c(nodes_gmdbn, "."), n_prop),
-                  rep(seq_len(n_prop), each = length(nodes_gmdbn))))
+          c(str_c(rep(str_c(nodes_gmdbn, "."), n_prop),
+                  rep(rev(seq_len(n_prop)), each = length(nodes_gmdbn))),
+            nodes_gmdbn)
       }
 
       evid <- evid %>%
-        select_if(col_evid %in% col_evid_prop)
+        select(any_of(col_evid_prop))
       evid_pred <- evid_pred %>%
-        select_if(col_evid_pred %in% col_evid_prop)
+        select(any_of(col_evid_prop))
       times_gmbn <- gmdbn %>%
         names() %>%
         str_remove("b_") %>%
@@ -441,7 +439,7 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
       n_sub <- (nrow(n_times_seq) * n_part - 1) %/% max_part_sim + 1
       pred <- n_times_seq %>%
         mutate(!!col_sub := ntile(!!sym(col_n), n_sub)) %>%
-        group_by_at(col_sub) %>%
+        group_by(across(col_sub)) %>%
         group_map(function(n_times_seq, sub) {
           if (verbose) {
             verb <- "subset " %>%
@@ -453,7 +451,7 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
           }
 
           seq <- n_times_seq %>%
-            select_at(col_seq)
+            select(all_of(col_seq))
 
           if (n_sub > 1) {
             evid <- seq %>%
@@ -476,7 +474,7 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
 
             if (time > 0) {
               evid_time <- evid %>%
-                group_by_at(col_seq) %>%
+                group_by(across(col_seq)) %>%
                 slice(time) %>%
                 ungroup()
 
@@ -486,7 +484,7 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
               }
 
               part <- part %>%
-                select_if(colnames(.) %in% col_prop)
+                select(any_of(col_prop))
 
               if (time == time_gmbn) {
                 gmbn <- gmdbn[[i_gmbn]]
@@ -508,7 +506,7 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
             for (time_hor in seq_time_hor) {
               time_pred <- time + time_hor
               evid_time_pred <- evid_pred %>%
-                group_by_at(col_seq) %>%
+                group_by(across(col_seq)) %>%
                 slice(time_pred) %>%
                 ungroup()
 
@@ -547,14 +545,14 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
         map2(horizon, function(pred, horizon) {
           pred %>%
             bind_rows() %>%
-            group_by_at(col_seq) %>%
+            group_by(across(col_seq)) %>%
             mutate(!!col_time := seq_len(n())) %>%
             ungroup() %>%
             left_join(seq_time, ., by = col_seq_time) %>%
-            group_by_at(col_seq) %>%
-            mutate_at(nodes, ~ lag(., horizon - 1)) %>%
+            group_by(across(col_seq)) %>%
+            mutate(across(nodes, ~ lag(., horizon - 1))) %>%
             ungroup() %>%
-            select_at(col_pred) %>%
+            select(all_of(col_pred)) %>%
             return()
         })
 

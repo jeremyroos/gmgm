@@ -131,7 +131,7 @@ propagation <- function(part, gmgm, evid = NULL, col_seq = NULL,
   }
 
   seq <- part %>%
-    select_at(col_seq)
+    select(all_of(col_seq))
 
   if (any(!(map_chr(seq, mode) %in% c("numeric", "character", "logical")))) {
     "columns of part[col_seq] have invalid types" %>%
@@ -232,7 +232,7 @@ propagation <- function(part, gmgm, evid = NULL, col_seq = NULL,
       }
 
       seq_evid <- evid %>%
-        select_at(col_seq)
+        select(all_of(col_seq))
 
       if (any(!map2_lgl(seq, seq_evid,
                         function(seq, seq_evid) {
@@ -247,7 +247,7 @@ propagation <- function(part, gmgm, evid = NULL, col_seq = NULL,
       }
 
       nodes_evid <- evid %>%
-        select_if(col_evid %in% nodes)
+        select(any_of(nodes))
 
       if (any(map_chr(nodes_evid, mode) != "numeric")) {
         "columns of evid related to nodes are not numeric" %>%
@@ -354,32 +354,32 @@ propagation <- function(part, gmgm, evid = NULL, col_seq = NULL,
 
       part <- part %>%
         set_names(col_part) %>%
-        group_by_at(col_seq) %>%
+        group_by(across(col_seq)) %>%
         group_map(function(part, seq) {
           if (sum(part[[col_weight]] ^ 2) - 1 / (min_ess * nrow(part)) > eps) {
             part <- part %>%
               sample_frac(replace = TRUE, weight = !!sym(col_weight)) %>%
-              mutate_at(col_weight, ~ 1)
+              mutate(across(col_weight, ~ 1))
           }
 
           part %>%
             return()
         }, .keep = TRUE) %>%
         bind_rows() %>%
-        mutate_at(col_weight, log)
+        mutate(across(col_weight, log))
       part_prop <- part %>%
-        select_at(c(col_seq, from_lag))
+        select(all_of(c(col_seq, from_lag)))
       part_miss <- part_prop %>%
-        group_by_at(col_seq) %>%
-        mutate_at(from_lag, ~ any(. != .[1])) %>%
+        group_by(across(col_seq)) %>%
+        mutate(across(from_lag, ~ any(. != .[1]))) %>%
         ungroup() %>%
-        select_at(from_lag) %>%
+        select(all_of(from_lag)) %>%
         as.matrix()
       part_prop <- part_prop %>%
-        select_at(from_lag) %>%
+        select(all_of(from_lag)) %>%
         as.matrix()
       evid_time <- evid %>%
-        group_by_at(col_seq) %>%
+        group_by(across(col_seq)) %>%
         slice(time_prop) %>%
         ungroup()
 
@@ -394,7 +394,7 @@ propagation <- function(part, gmgm, evid = NULL, col_seq = NULL,
       } else {
         evid_prop <- part %>%
           left_join(evid_time, by = col_seq) %>%
-          select_at(nodes)
+          select(all_of(nodes))
       }
 
       evid_prop <- evid_prop %>%
@@ -443,14 +443,14 @@ propagation <- function(part, gmgm, evid = NULL, col_seq = NULL,
         part_prop <- part_prop %>%
           cbind(do.call("cbind", res_prop$evid_prop))
         part <- part %>%
-          mutate_at(col_weight, ~ . + reduce(res_prop$log_weights, `+`))
+          mutate(across(col_weight, ~ . + reduce(res_prop$log_weights, `+`)))
       }
 
       part <- part %>%
-        group_by_at(col_seq) %>%
-        mutate_at(col_weight, ~ . - max(.)) %>%
-        mutate_at(col_weight, exp) %>%
-        mutate_at(col_weight, ~ . / sum(.)) %>%
+        group_by(across(col_seq)) %>%
+        mutate(across(col_weight, ~ . - max(.))) %>%
+        mutate(across(col_weight, exp)) %>%
+        mutate(across(col_weight, ~ . / sum(.))) %>%
         ungroup() %>%
         bind_cols(as_tibble(part_prop[, nodes, drop = FALSE]))
     }

@@ -127,7 +127,7 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
   }
 
   seq <- evid %>%
-    select_at(col_seq) %>%
+    select(all_of(col_seq)) %>%
     as_tibble()
 
   if (any(!(map_chr(seq, mode) %in% c("numeric", "character", "logical")))) {
@@ -175,8 +175,8 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
     filt <- lag %>%
       map(function(lag) {
         infer %>%
-          group_by_at(col_seq) %>%
-          mutate_at(nodes, ~ lead(lag(., lag), lag)) %>%
+          group_by(across(col_seq)) %>%
+          mutate(across(nodes, ~ lead(lag(., lag), lag))) %>%
           ungroup() %>%
           return()
       })
@@ -219,7 +219,7 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
     col_n <- prefix %>%
       str_c("n")
     n_times_seq <- seq %>%
-      group_by_at(col_seq) %>%
+      group_by(across(col_seq)) %>%
       summarise(!!col_n := n(), .groups = "drop")
     min_lag <- lag[1]
 
@@ -309,8 +309,7 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
 
       if (n_nodes < n_nodes_gmdbn) {
         nodes_obs <- evid %>%
-          select_if(col_evid %in% nodes_gmdbn) %>%
-          select_if(~ !any(is.na(.))) %>%
+          select(any_of(nodes_gmdbn) & where(~ !any(is.na(.)))) %>%
           colnames()
         blanket <- nodes
         blanket_miss <- blanket[!(blanket %in% nodes_obs)]
@@ -354,13 +353,13 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
 
       if (n_prop >= 0) {
         col_prop <- col_prop %>%
-          c(nodes_gmdbn,
-            str_c(rep(str_c(nodes_gmdbn, "."), n_prop),
-                  rep(seq_len(n_prop), each = n_nodes_gmdbn)))
+          c(str_c(rep(str_c(nodes_gmdbn, "."), n_prop),
+                  rep(rev(seq_len(n_prop)), each = n_nodes_gmdbn)),
+            nodes_gmdbn)
       }
 
       evid <- evid %>%
-        select_if(col_evid %in% col_evid_prop)
+        select(any_of(col_evid_prop))
       times_gmbn <- gmdbn %>%
         names() %>%
         str_remove("b_") %>%
@@ -374,7 +373,7 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
       n_sub <- (nrow(n_times_seq) * n_part - 1) %/% max_part_sim + 1
       filt <- n_times_seq %>%
         mutate(!!col_sub := ntile(!!sym(col_n), n_sub)) %>%
-        group_by_at(col_sub) %>%
+        group_by(across(col_sub)) %>%
         group_map(function(n_times_seq, sub) {
           if (verbose) {
             verb <- "subset " %>%
@@ -386,7 +385,7 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
           }
 
           seq <- n_times_seq %>%
-            select_at(col_seq)
+            select(all_of(col_seq))
 
           if (n_sub > 1) {
             evid <- seq %>%
@@ -408,7 +407,7 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
             }
 
             evid_time <- evid %>%
-              group_by_at(col_seq) %>%
+              group_by(across(col_seq)) %>%
               slice(time) %>%
               ungroup()
 
@@ -418,7 +417,7 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
             }
 
             part <- part %>%
-              select_if(colnames(.) %in% col_prop)
+              select(any_of(col_prop))
 
             if (time == time_gmbn) {
               gmbn <- gmdbn[[i_gmbn]]
@@ -442,7 +441,7 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
       col_time <- prefix %>%
         str_c("time")
       seq_time <- seq %>%
-        group_by_at(col_seq) %>%
+        group_by(across(col_seq)) %>%
         mutate(!!col_time := seq_len(n())) %>%
         ungroup()
       col_seq_time <- col_seq %>%
@@ -453,11 +452,11 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
       if (n_lags == 1) {
         filt <- filt %>%
           bind_rows() %>%
-          group_by_at(col_seq) %>%
+          group_by(across(col_seq)) %>%
           mutate(!!col_time := seq_len(n())) %>%
           ungroup() %>%
           left_join(seq_time, ., by = col_seq_time) %>%
-          select_at(col_filt)
+          select(all_of(col_filt))
       } else {
         filt <- filt %>%
           flatten() %>%
@@ -465,14 +464,14 @@ filtering <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
           map2(lag, function(filt, lag) {
             filt %>%
               bind_rows() %>%
-              group_by_at(col_seq) %>%
+              group_by(across(col_seq)) %>%
               mutate(!!col_time := seq_len(n())) %>%
               ungroup() %>%
               left_join(seq_time, ., by = col_seq_time) %>%
-              group_by_at(col_seq) %>%
-              mutate_at(nodes, ~ lead(., lag - min_lag)) %>%
+              group_by(across(col_seq)) %>%
+              mutate(across(nodes, ~ lead(., lag - min_lag))) %>%
               ungroup() %>%
-              select_at(col_filt) %>%
+              select(all_of(col_filt)) %>%
               return()
           })
       }
