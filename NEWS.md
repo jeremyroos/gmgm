@@ -1,4 +1,4 @@
-## gmgm (development version)
+## gmgm 1.0.2
 
 * Replaced dplyr's scoped verbs (`_all`, `_at`, `_if`), which have been superseded by the use of function `across`.
 * Modified function `gmm` to coerce the elements of the `gmm` object to type double.
