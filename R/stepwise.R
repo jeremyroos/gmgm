@@ -53,15 +53,14 @@
 #' \donttest{
 #' data(data_body)
 #' gmm_1 <- add_var(NULL, "WAIST")
-#' res_step <- stepwise(gmm_1, data_body, verbose = TRUE, max_comp = 3,
-#'                      max_rank = 1, regul = 0.01, max_iter_em = 100)}
+#' res_step <- stepwise(gmm_1, data_body, verbose = TRUE, max_comp = 3)}
 #'
 #' @export
 
 stepwise <- function(gmm, data, y = rownames(gmm$mu)[1],
                      x_cand = setdiff(colnames(data), y), score = "bic",
                      add = TRUE, remove = TRUE, min_x = 0, max_x = Inf,
-                     max_iter_step = Inf, verbose = FALSE, ...) {
+                     max_iter_step = 10, verbose = FALSE, ...) {
   if (!inherits(gmm, "gmm")) {
     "gmm is not of class \"gmm\"" %>%
       stop()

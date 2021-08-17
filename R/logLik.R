@@ -13,7 +13,7 @@
 #' joint log-likelihood is computed.
 #' @param regul A positive numeric value corresponding to the regularization
 #' constant if a penalty term is added for Bayesian regularization. If
-#' \code{NULL} (the default) no penalty term is added. If a conditional
+#' \code{NULL}, no penalty term is added. If a conditional
 #' log-likelihood is computed, this argument is ignored.
 #' @param \dots Unused arguments from the generic function.
 #' @param col_seq A character vector containing the column names of \code{data}
@@ -50,7 +50,7 @@
 #' @name logLik
 #' @export
 
-logLik.gmm <- function(object, data, y = NULL, regul = NULL, ...) {
+logLik.gmm <- function(object, data, y = NULL, regul = 0.01, ...) {
   loglik <- object %>%
     density(data, y = y, log = TRUE) %>%
     sum()

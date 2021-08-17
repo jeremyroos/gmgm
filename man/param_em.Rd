@@ -13,7 +13,7 @@ param_em(
   n_part = 1000,
   max_part_sim = 1e+06,
   min_ess = 1,
-  max_iter_pem = Inf,
+  max_iter_pem = 5,
   verbose = FALSE,
   ...
 )
@@ -113,8 +113,7 @@ gmbn_1 <- gmbn(
                      n_sub = 3),
   WEIGHT = split_comp(add_var(NULL, data_1[, c("WEIGHT", "HEIGHT")]), n_sub = 2)
 )
-res_learn_1 <- param_em(gmbn_1, data_1, verbose = TRUE, regul = 0.01,
-                        max_iter_em = 100)
+res_learn_1 <- param_em(gmbn_1, data_1, verbose = TRUE)
 
 library(dplyr)
 set.seed(0)
@@ -151,8 +150,7 @@ gmdbn_1 <- gmdbn(
     WIND = split_comp(add_var(NULL, data_3[, c("WIND", "WIND.1")]), n_sub = 3)
   )
 )
-res_learn_2 <- param_em(gmdbn_1, data_2, col_seq = "DATE", verbose = TRUE,
-                        regul = 0.01, max_iter_em = 100)}
+res_learn_2 <- param_em(gmdbn_1, data_2, col_seq = "DATE", verbose = TRUE)}
 
 }
 \references{

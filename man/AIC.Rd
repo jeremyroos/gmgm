@@ -8,7 +8,7 @@
 \title{Compute the Akaike Information Criterion (AIC) of a Gaussian mixture model or
 graphical model}
 \usage{
-\method{AIC}{gmm}(object, data, y = NULL, regul = NULL, ...)
+\method{AIC}{gmm}(object, data, y = NULL, regul = 0.01, ...)
 
 \method{AIC}{gmbn}(object, data, col_seq = NULL, ...)
 
@@ -28,8 +28,8 @@ computed.}
 
 \item{regul}{A positive numeric value corresponding to the regularization
 constant if a penalty term is added for Bayesian regularization. If
-\code{NULL} (the default) no penalty term is added. If a conditional AIC is
-computed, this argument is ignored.}
+\code{NULL}, no penalty term is added. If a conditional AIC is computed, this
+argument is ignored.}
 
 \item{\dots}{Unused arguments from the generic function.}
 

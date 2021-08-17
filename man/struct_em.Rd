@@ -15,8 +15,8 @@ struct_em(
   n_part = 1000,
   max_part_sim = 1e+06,
   min_ess = 1,
-  max_iter_sem = Inf,
-  max_iter_pem = Inf,
+  max_iter_sem = 5,
+  max_iter_pem = 5,
   verbose = FALSE,
   ...
 )
@@ -132,8 +132,7 @@ arcs_cand_1 <- data.frame(from = c("AGE", "GENDER", "HEIGHT", "WEIGHT", NA,
                                  "HEIGHT", "WAIST", "WAIST", "WAIST", "WAIST",
                                  "WAIST", "WEIGHT", "WEIGHT", "WEIGHT"))
 res_learn_1 <- struct_em(gmbn_1, data_1, arcs_cand = arcs_cand_1,
-                         verbose = TRUE, max_comp = 3, max_rank = 1,
-                         regul = 0.01, max_iter_em = 100)
+                         verbose = TRUE, max_comp = 3)
 
 set.seed(0)
 data(data_air)
@@ -149,8 +148,7 @@ arcs_cand_2 <- data.frame(from = c("NO2", "NO2", "NO2", "O3", "TEMP", "TEMP",
                           to = c("NO2", "O3", "O3", "O3", NA, NA, NA, NA),
                           lag = c(1, 0, 1, 1, 0, 1, 0, 1))
 res_learn_2 <- struct_em(gmdbn_1, data_2, arcs_cand = arcs_cand_2,
-                         col_seq = "DATE", verbose = TRUE, max_comp = 3,
-                         max_rank = 1, regul = 0.01, max_iter_em = 100)}
+                         col_seq = "DATE", verbose = TRUE, max_comp = 3)}
 
 }
 \references{

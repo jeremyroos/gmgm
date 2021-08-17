@@ -79,8 +79,7 @@
 #'                                  "HEIGHT", "WAIST", "WAIST", "WAIST", "WAIST",
 #'                                  "WAIST", "WEIGHT", "WEIGHT", "WEIGHT"))
 #' res_learn_1 <- struct_learn(gmbn_1, data_body, arcs_cand = arcs_cand_1,
-#'                             verbose = TRUE, max_comp = 3, max_rank = 1,
-#'                             regul = 0.01, max_iter_em = 100)
+#'                             verbose = TRUE, max_comp = 3)
 #'
 #' data(data_air)
 #' gmdbn_1 <- gmdbn(b_2 = add_nodes(NULL, c("NO2", "O3", "TEMP", "WIND")),
@@ -90,8 +89,7 @@
 #'                           to = c("NO2", "O3", "O3", "O3", NA, NA, NA, NA),
 #'                           lag = c(1, 0, 1, 1, 0, 1, 0, 1))
 #' res_learn_2 <- struct_learn(gmdbn_1, data_air, arcs_cand = arcs_cand_2,
-#'                             col_seq = "DATE", verbose = TRUE, max_comp = 3,
-#'                             max_rank = 1, regul = 0.01, max_iter_em = 100)}
+#'                             col_seq = "DATE", verbose = TRUE, max_comp = 3)}
 #'
 #' @export
 

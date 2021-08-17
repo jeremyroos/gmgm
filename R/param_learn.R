@@ -62,8 +62,7 @@
 #'   WEIGHT = split_comp(add_var(NULL, data_body[, c("WEIGHT", "HEIGHT")]),
 #'                       n_sub = 2)
 #' )
-#' res_learn_1 <- param_learn(gmbn_1, data_body, verbose = TRUE, regul = 0.01,
-#'                            max_iter_em = 100)
+#' res_learn_1 <- param_learn(gmbn_1, data_body, verbose = TRUE)
 #'
 #' library(dplyr)
 #' data(data_air)
@@ -93,8 +92,7 @@
 #'     WIND = split_comp(add_var(NULL, data[, c("WIND", "WIND.1")]), n_sub = 3)
 #'   )
 #' )
-#' res_learn_2 <- param_learn(gmdbn_1, data_air, col_seq = "DATE", verbose = TRUE,
-#'                            regul = 0.01, max_iter_em = 100)}
+#' res_learn_2 <- param_learn(gmdbn_1, data_air, col_seq = "DATE", verbose = TRUE)}
 #'
 #' @export
 
@@ -105,7 +103,7 @@ param_learn <- function(gmgm, data, nodes = structure(gmgm)$nodes,
                  col_seq = col_seq, score = "loglik", verbose = verbose,
                  add = TRUE, remove = TRUE, min_x = 0, max_x = Inf,
                  max_iter_step = 1, split = TRUE, merge = TRUE, min_comp = 1,
-                 max_comp = Inf, space = 0.5, max_rank = Inf, max_iter_smem = 1,
+                 max_comp = Inf, space = 0.5, max_rank = 1, max_iter_smem = 1,
                  ...) %>%
     set_names("gmgm", "evol_loglik") %>%
     return()

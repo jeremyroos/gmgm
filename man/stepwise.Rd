@@ -15,7 +15,7 @@ stepwise(
   remove = TRUE,
   min_x = 0,
   max_x = Inf,
-  max_iter_step = Inf,
+  max_iter_step = 10,
   verbose = FALSE,
   ...
 )
@@ -84,8 +84,7 @@ algorithm stops if none of the candidate operations improves the score.
 \donttest{
 data(data_body)
 gmm_1 <- add_var(NULL, "WAIST")
-res_step <- stepwise(gmm_1, data_body, verbose = TRUE, max_comp = 3,
-                     max_rank = 1, regul = 0.01, max_iter_em = 100)}
+res_step <- stepwise(gmm_1, data_body, verbose = TRUE, max_comp = 3)}
 
 }
 \seealso{
