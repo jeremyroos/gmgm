@@ -8,7 +8,7 @@
 \title{Compute the Bayesian Information Criterion (BIC) of a Gaussian mixture model
 or graphical model}
 \usage{
-\method{BIC}{gmm}(object, data, y = NULL, regul = NULL, ...)
+\method{BIC}{gmm}(object, data, y = NULL, regul = 0.01, ...)
 
 \method{BIC}{gmbn}(object, data, col_seq = NULL, ...)
 
@@ -28,8 +28,8 @@ computed.}
 
 \item{regul}{A positive numeric value corresponding to the regularization
 constant if a penalty term is added for Bayesian regularization. If
-\code{NULL} (the default) no penalty term is added. If a conditional BIC is
-computed, this argument is ignored.}
+\code{NULL}, no penalty term is added. If a conditional BIC is computed, this
+argument is ignored.}
 
 \item{\dots}{Unused arguments from the generic function.}
 

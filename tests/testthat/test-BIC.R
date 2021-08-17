@@ -33,11 +33,11 @@ class(gmdbn_2) <- "gmdbn"
 
 test_that("compute the BIC of a gmm object", {
   expect_equal(BIC(gmm_1, data.frame(A = c(0, 3, 6, 9), B = c(4, 7, 1, 6))),
-               - 117.7119, tolerance = 0.01)
+               - 117.7619, tolerance = 0.01)
   expect_equal(BIC(gmm_1,
                    matrix(c(0, 3, 6, 9, 4, 7, 1, 6), 4,
                           dimnames = list(NULL, c("A", "B")))),
-               - 117.7119, tolerance = 0.01)
+               - 117.7619, tolerance = 0.01)
 })
 
 test_that("compute the BIC of a gmm object with missing values", {
@@ -49,7 +49,7 @@ test_that("compute the BIC of a gmm object with extra columns", {
   expect_equal(BIC(gmm_1,
                    data.frame(A = c(0, 3, 6, 9), B = c(4, 7, 1, 6),
                               C = c(0, 0, 0, 0))),
-               - 117.7119, tolerance = 0.01)
+               - 117.7619, tolerance = 0.01)
 })
 
 test_that("compute the BIC of a gmm object with no row", {
@@ -57,10 +57,10 @@ test_that("compute the BIC of a gmm object with no row", {
   expect_equal(BIC(gmm_1, data.frame(A = logical(), B = logical())), Inf)
 })
 
-test_that("compute the regularized BIC of a gmm object", {
+test_that("compute the non-regularized BIC of a gmm object", {
   expect_equal(BIC(gmm_1, data.frame(A = c(0, 3, 6, 9), B = c(4, 7, 1, 6)),
-                   regul = 0.01),
-               - 117.7619, tolerance = 0.01)
+                   regul = NULL),
+               - 117.7119, tolerance = 0.01)
 })
 
 test_that("compute the conditional BIC of a gmm object", {

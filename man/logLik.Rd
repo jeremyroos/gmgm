@@ -7,7 +7,7 @@
 \alias{logLik.gmdbn}
 \title{Compute the log-likelihood of a Gaussian mixture model or graphical model}
 \usage{
-\method{logLik}{gmm}(object, data, y = NULL, regul = NULL, ...)
+\method{logLik}{gmm}(object, data, y = NULL, regul = 0.01, ...)
 
 \method{logLik}{gmbn}(object, data, col_seq = NULL, ...)
 
@@ -27,7 +27,7 @@ joint log-likelihood is computed.}
 
 \item{regul}{A positive numeric value corresponding to the regularization
 constant if a penalty term is added for Bayesian regularization. If
-\code{NULL} (the default) no penalty term is added. If a conditional
+\code{NULL}, no penalty term is added. If a conditional
 log-likelihood is computed, this argument is ignored.}
 
 \item{\dots}{Unused arguments from the generic function.}

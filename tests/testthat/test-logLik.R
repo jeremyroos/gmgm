@@ -33,11 +33,11 @@ class(gmdbn_2) <- "gmdbn"
 
 test_that("compute the log-likelihood of a gmm object", {
   expect_equal(logLik(gmm_1, data.frame(A = c(0, 3, 6, 9), B = c(4, 7, 1, 6))),
-               - 110.0873, tolerance = 0.01)
+               - 110.1373, tolerance = 0.01)
   expect_equal(logLik(gmm_1,
                       matrix(c(0, 3, 6, 9, 4, 7, 1, 6), 4,
                              dimnames = list(NULL, c("A", "B")))),
-               - 110.0873, tolerance = 0.01)
+               - 110.1373, tolerance = 0.01)
 })
 
 test_that("compute the log-likelihood of a gmm object with missing values", {
@@ -50,18 +50,18 @@ test_that("compute the log-likelihood of a gmm object with extra columns", {
   expect_equal(logLik(gmm_1,
                       data.frame(A = c(0, 3, 6, 9), B = c(4, 7, 1, 6),
                                  C = c(0, 0, 0, 0))),
-               - 110.0873, tolerance = 0.01)
+               - 110.1373, tolerance = 0.01)
 })
 
 test_that("compute the log-likelihood of a gmm object with no row", {
-  expect_equal(logLik(gmm_1, data.frame(A = numeric(), B = numeric())), 0)
-  expect_equal(logLik(gmm_1, data.frame(A = logical(), B = logical())), 0)
+  expect_equal(logLik(gmm_1, data.frame(A = numeric(), B = numeric())), - 0.05)
+  expect_equal(logLik(gmm_1, data.frame(A = logical(), B = logical())), - 0.05)
 })
 
-test_that("compute the regularized log-likelihood of a gmm object", {
+test_that("compute the non-regularized log-likelihood of a gmm object", {
   expect_equal(logLik(gmm_1, data.frame(A = c(0, 3, 6, 9), B = c(4, 7, 1, 6)),
-                      regul = 0.01),
-               - 110.1373, tolerance = 0.01)
+                      regul = NULL),
+               - 110.0873, tolerance = 0.01)
 })
 
 test_that("compute the conditional log-likelihood of a gmm object", {

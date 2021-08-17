@@ -19,8 +19,8 @@
 #' computed.
 #' @param regul A positive numeric value corresponding to the regularization
 #' constant if a penalty term is added for Bayesian regularization. If
-#' \code{NULL} (the default) no penalty term is added. If a conditional AIC is
-#' computed, this argument is ignored.
+#' \code{NULL}, no penalty term is added. If a conditional AIC is computed, this
+#' argument is ignored.
 #' @param \dots Unused arguments from the generic function.
 #' @param col_seq A character vector containing the column names of \code{data}
 #' that describe the observation sequence. If \code{NULL} (the default), all the
@@ -56,7 +56,7 @@
 #' @name AIC
 #' @export
 
-AIC.gmm <- function(object, data, y = NULL, regul = NULL, ...) {
+AIC.gmm <- function(object, data, y = NULL, regul = 0.01, ...) {
   return(logLik.gmm(object, data, y = y, regul = regul) -
            summary.gmm(object)[["n_param"]])
 }

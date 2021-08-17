@@ -73,8 +73,7 @@ arcs_cand <- data.frame(from = c("AGE", "GENDER", "HEIGHT", "WEIGHT", NA, "AGE",
                                "WAIST", "WEIGHT", "WEIGHT", "WEIGHT"))
                                   
 res_learn <- struct_learn(gmbn_init, data_train, arcs_cand = arcs_cand,
-                          verbose = TRUE, max_comp = 3, max_rank = 1,
-                          regul = 0.01, max_iter_em = 100)
+                          verbose = TRUE, max_comp = 3)
 
 #> node AGE    bic_old = -1604165.22026861    bic_new = -6936.35703030545
 #> node FAT    bic_old = -1101157.27026861    bic_new = -5240.27043715568
@@ -121,7 +120,7 @@ print(res_learn$gmgm$WEIGHT)
 
 Graphically, we observe that these mixture components fit well with the training data: 
 ```r
-ellipses(res_learn$gmgm$WEIGHT, data = data_train)
+ellipses(res_learn$gmgm$WEIGHT, data_train)
 ```
 <img src="man/figures/ellipses.png"/>
 

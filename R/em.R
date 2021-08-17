@@ -4,20 +4,20 @@
 #' expectation-maximization (EM) algorithm. Given an initial model, this
 #' algorithm iteratively updates the parameters, monotonically increasing the
 #' log-likelihood until convergence to a local maximum (Bilmes, 1998). A
-#' Bayesian regularization can be applied during the process to prevent that a
-#' mixture component comes down to a single point and leads to a zero covariance
-#' matrix (Ormoneit and Tresp, 1996). Although the EM algorithm only applies to
-#' the joint model, good parameters can be found for a derived conditional
-#' model. However, care should be taken as the monotonic increase of the
-#' conditional log-likelihood is not guaranteed.
+#' Bayesian regularization is applied by default to prevent that a mixture
+#' component comes down to a single point and leads to a zero covariance matrix
+#' (Ormoneit and Tresp, 1996). Although the EM algorithm only applies to the
+#' joint model, good parameters can be found for a derived conditional model.
+#' However, care should be taken as the monotonic increase of the conditional
+#' log-likelihood is not guaranteed.
 #'
 #' @param gmm An initial object of class \code{gmm}.
 #' @param data A data frame or numeric matrix containing the data used in the
 #' EM algorithm. Its columns must explicitly be named after the variables of
 #' \code{gmm} and must not contain missing values.
 #' @param regul A positive numeric value corresponding to the regularization
-#' constant if a Bayesian regularization is applied. If \code{NULL} (the
-#' default), no regularization is applied.
+#' constant if a Bayesian regularization is applied. If \code{NULL}, no
+#' regularization is applied.
 #' @param epsilon A positive numeric value corresponding to the convergence
 #' threshold for the increase in log-likelihood.
 #' @param max_iter_em A non-negative integer corresponding to the maximum number
@@ -49,11 +49,11 @@
 #'                             data_body[, c("WAIST", "AGE", "FAT", "HEIGHT",
 #'                                           "WEIGHT")]),
 #'                     n_sub = 3)
-#' res_em <- em(gmm_1, data_body, regul = 0.01, max_iter_em = 100, verbose = TRUE)
+#' res_em <- em(gmm_1, data_body, verbose = TRUE)
 #'
 #' @export
 
-em <- function(gmm, data, regul = NULL, epsilon = 1e-06, max_iter_em = Inf,
+em <- function(gmm, data, regul = 0.01, epsilon = 1e-06, max_iter_em = 100,
                verbose = FALSE) {
   if (!inherits(gmm, "gmm")) {
     "gmm is not of class \"gmm\"" %>%

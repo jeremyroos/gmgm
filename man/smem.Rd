@@ -15,8 +15,8 @@ smem(
   min_comp = 1,
   max_comp = Inf,
   space = 0.5,
-  max_rank = Inf,
-  max_iter_smem = Inf,
+  max_rank = 1,
+  max_iter_smem = 10,
   verbose = FALSE,
   ...
 )
@@ -89,8 +89,7 @@ given maximum rank is reached without improving the score.
 \examples{
 data(data_body)
 gmm_1 <- add_var(NULL, c("WAIST", "AGE", "FAT", "HEIGHT", "WEIGHT"))
-res_smem <- smem(gmm_1, data_body, max_comp = 3, max_rank = 1, verbose = TRUE,
-                 regul = 0.01, max_iter_em = 100)
+res_smem <- smem(gmm_1, data_body, max_comp = 3, verbose = TRUE)
 
 }
 \references{
