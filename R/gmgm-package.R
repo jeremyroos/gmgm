@@ -18,8 +18,8 @@
 #' \item visualizing Gaussian mixture models: \code{\link{ellipses}};
 #' \item creating Gaussian mixture graphical models:
 #' \code{\link{add_arcs}}, \code{\link{add_nodes}}, \code{\link{gmbn}},
-#' \code{\link{gmdbn}}, \code{\link{remove_arcs}}, \code{\link{remove_nodes}},
-#' \code{\link{rename_nodes}};
+#' \code{\link{gmdbn}}, \code{\link{relevant}}, \code{\link{remove_arcs}},
+#' \code{\link{remove_nodes}}, \code{\link{rename_nodes}};
 #' \item manipulating Gaussian mixture graphical models: \code{\link{AIC}},
 #' \code{\link{BIC}}, \code{\link{logLik}}, \code{\link{structure}},
 #' \code{\link{summary}};

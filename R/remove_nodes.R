@@ -10,7 +10,7 @@
 #' @return The \code{gmbn} or \code{gmdbn} object after removing the nodes.
 #'
 #' @seealso \code{\link{add_arcs}}, \code{\link{add_nodes}},
-#' \code{\link{remove_arcs}}, \code{\link{rename_nodes}}
+#' \code{\link{relevant}}, \code{\link{remove_arcs}}, \code{\link{rename_nodes}}
 #'
 #' @examples
 #' data(gmbn_body)
@@ -23,16 +23,14 @@
 
 remove_nodes <- function(gmgm, nodes) {
   if (inherits(gmgm, "gmbn")) {
-    struct <- gmgm %>%
-      structure()
-    nodes_gmgm <- struct$nodes
-
     if (!is.null(nodes) & !is.vector(nodes, "character")) {
       "nodes is not a character vector" %>%
         stop()
     }
 
-    nodes_gmgm <- nodes_gmgm %>%
+    struct <- gmgm %>%
+      structure()
+    nodes_gmgm <- struct$nodes %>%
       setdiff(nodes)
     gmgm <- gmgm[nodes_gmgm]
     arcs <- struct$arcs %>%

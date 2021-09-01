@@ -29,5 +29,5 @@ gmdbn_1 <- remove_nodes(gmdbn_air, "TEMP")
 }
 \seealso{
 \code{\link{add_arcs}}, \code{\link{add_nodes}},
-\code{\link{remove_arcs}}, \code{\link{rename_nodes}}
+\code{\link{relevant}}, \code{\link{remove_arcs}}, \code{\link{rename_nodes}}
 }

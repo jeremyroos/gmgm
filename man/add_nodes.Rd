@@ -30,6 +30,7 @@ gmdbn_1 <- add_nodes(gmdbn_air, "PM10")
 
 }
 \seealso{
-\code{\link{add_arcs}}, \code{\link{remove_arcs}},
-\code{\link{remove_nodes}}, \code{\link{rename_nodes}}
+\code{\link{add_arcs}}, \code{\link{relevant}},
+\code{\link{remove_arcs}}, \code{\link{remove_nodes}},
+\code{\link{rename_nodes}}
 }

@@ -42,5 +42,6 @@ gmdbn_1 <- remove_arcs(gmdbn_air,
 }
 \seealso{
 \code{\link{add_arcs}}, \code{\link{add_nodes}},
-\code{\link{remove_nodes}}, \code{\link{rename_nodes}}
+\code{\link{relevant}}, \code{\link{remove_nodes}},
+\code{\link{rename_nodes}}
 }

@@ -166,38 +166,20 @@ inference <- function(gmbn, evid, nodes = names(gmbn), n_part = 1000,
         stop()
     }
 
-    evid <- evid %>%
-      select(any_of(nodes_gmbn))
-
     if (n_nodes < length(nodes_gmbn)) {
-      arcs <- struct$arcs
-      nodes_obs <- evid %>%
+      evid_nodes <- evid %>%
+        select(any_of(nodes_gmbn))
+      nodes_obs <- evid_nodes %>%
         select(where(~ !any(is.na(.)))) %>%
         colnames()
-      blanket <- nodes
-      blanket_miss <- blanket[!(blanket %in% nodes_obs)]
-
-      while (length(blanket_miss) > 0) {
-        child <- arcs %>%
-          filter(from %in% blanket_miss) %>%
-          .$to
-        copar <- arcs %>%
-          filter(to %in% c(blanket_miss, child)) %>%
-          .$from
-        blanket_add <- child %>%
-          c(copar) %>%
-          setdiff(blanket)
-        blanket <- blanket %>%
-          c(blanket_add)
-        blanket_miss <- blanket_add[!(blanket_add %in% nodes_obs)]
-      }
-
+      nodes_miss <- evid_nodes %>%
+        select(where(~ all(is.na(.)))) %>%
+        colnames() %>%
+        c(setdiff(nodes_gmbn, colnames(evid_nodes)))
       gmbn <- gmbn %>%
-        remove_nodes(setdiff(nodes_gmbn, blanket))
+        relevant(nodes, nodes_obs, nodes_miss)
       nodes_gmbn <- gmbn %>%
         names()
-      evid <- evid %>%
-        select(any_of(nodes_gmbn))
     }
 
     prefix <- nodes_gmbn %>%
@@ -211,6 +193,7 @@ inference <- function(gmbn, evid, nodes = names(gmbn), n_part = 1000,
       str_c("weight")
     n_sub <- (n_obs * n_part - 1) %/% max_part_sim + 1
     infer <- evid %>%
+      select(any_of(nodes_gmbn)) %>%
       mutate(!!col_seq := seq_len(n()),
              !!col_sub := ntile(!!sym(col_seq), n_sub)) %>%
       group_by(across(col_sub)) %>%

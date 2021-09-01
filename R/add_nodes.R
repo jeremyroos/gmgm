@@ -11,8 +11,9 @@
 #'
 #' @return The \code{gmbn} or \code{gmdbn} object after adding the nodes.
 #'
-#' @seealso \code{\link{add_arcs}}, \code{\link{remove_arcs}},
-#' \code{\link{remove_nodes}}, \code{\link{rename_nodes}}
+#' @seealso \code{\link{add_arcs}}, \code{\link{relevant}},
+#' \code{\link{remove_arcs}}, \code{\link{remove_nodes}},
+#' \code{\link{rename_nodes}}
 #'
 #' @examples
 #' data(gmbn_body)
