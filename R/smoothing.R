@@ -221,39 +221,23 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
 
       n_nodes_gmdbn <- nodes_gmdbn %>%
         length()
-      arcs <- struct$arcs %>%
-        bind_rows()
 
       if (n_nodes < n_nodes_gmdbn) {
-        nodes_obs <- evid %>%
-          select(any_of(nodes_gmdbn) & where(~ !any(is.na(.)))) %>%
+        evid_nodes <- evid %>%
+          select(any_of(nodes_gmdbn))
+        nodes_obs <- evid_nodes %>%
+          select(where(~ !any(is.na(.)))) %>%
           colnames()
-        blanket <- nodes
-        blanket_miss <- blanket[!(blanket %in% nodes_obs)]
-
-        while (length(blanket_miss) > 0) {
-          child <- arcs %>%
-            filter(from %in% blanket_miss) %>%
-            .$to
-          copar <- arcs %>%
-            filter(to %in% c(blanket_miss, child)) %>%
-            .$from
-          blanket_add <- child %>%
-            c(copar) %>%
-            setdiff(blanket)
-          blanket <- blanket %>%
-            c(blanket_add)
-          blanket_miss <- blanket_add[!(blanket_add %in% nodes_obs)]
-        }
-
+        nodes_miss <- evid_nodes %>%
+          select(where(~ all(is.na(.)))) %>%
+          colnames() %>%
+          c(setdiff(nodes_gmdbn, colnames(evid_nodes)))
         gmdbn <- gmdbn %>%
-          remove_nodes(setdiff(nodes_gmdbn, blanket))
+          relevant(nodes, nodes_obs, nodes_miss)
         nodes_gmdbn <- gmdbn$b_1 %>%
           names()
         n_nodes_gmdbn <- nodes_gmdbn %>%
           length()
-        arcs <- arcs %>%
-          filter(from %in% blanket, to %in% blanket)
       }
 
       col_evid_prop <- col_seq %>%
@@ -272,7 +256,10 @@ smoothing <- function(gmdbn, evid, nodes = names(gmdbn$b_1), col_seq = NULL,
         str_c("draw")
       col_prop <- col_seq %>%
         c(col_weight, col_draw)
-      n_prop <- arcs$lag %>%
+      n_prop <- struct$arcs %>%
+        bind_rows() %>%
+        filter(from %in% nodes_gmdbn, to %in% nodes_gmdbn) %>%
+        .$lag %>%
         max(0) - 1
 
       if (n_prop >= 0) {

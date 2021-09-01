@@ -1,5 +1,6 @@
 ## gmgm (development version)
 
+* Created function `relevant`, which extracts the minimal sub-Gaussian mixture graphical model required to infer a subset of nodes.
 * Changed the default values of several arguments to increase the speed of learning functions and make them easier to use:
   * `regul = NULL` → `regul = 0.01` (functions `AIC`, `BIC`, `logLik`, `em`)
   * `max_iter_em = Inf` → `max_iter_em = 100` (function `em`)

@@ -33,5 +33,5 @@ gmdbn_1 <- rename_nodes(gmdbn_air, "TEMP", "TEMPERATURE")
 }
 \seealso{
 \code{\link{add_arcs}}, \code{\link{add_nodes}},
-\code{\link{remove_arcs}}, \code{\link{remove_nodes}}
+\code{\link{relevant}}, \code{\link{remove_arcs}}, \code{\link{remove_nodes}}
 }

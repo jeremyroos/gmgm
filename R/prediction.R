@@ -114,7 +114,7 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
         stop()
     }
 
-    if (any(str_remove(col_seq, "\\.[1-9][0-9]*$") %in% nodes)) {
+    if (any(str_remove(col_seq, "\\.[1-9][0-9]*$") %in% nodes_gmdbn)) {
       "col_seq contains nodes (or instantiations of nodes) of gmdbn" %>%
         stop()
     }
@@ -357,50 +357,41 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
 
       n_nodes_gmdbn <- nodes_gmdbn %>%
         length()
-      arcs <- struct$arcs %>%
-        bind_rows()
 
       if (n_nodes < n_nodes_gmdbn) {
-        nodes_obs_evid <- evid %>%
-          select(any_of(nodes_gmdbn) & where(~ !any(is.na(.)))) %>%
-          colnames()
-        nodes_obs <- evid_pred %>%
+        evid_nodes <- evid %>%
+          select(any_of(nodes_gmdbn))
+        evid_pred_nodes <- evid_pred %>%
           select(any_of(col_evid_prop)) %>%
           group_by(across(col_seq)) %>%
           mutate(!!col_time := seq_len(n())) %>%
           ungroup() %>%
           left_join(seq_time, ., by = col_seq_time) %>%
-          select(any_of(nodes_gmdbn) & where(~ !any(is.na(.)))) %>%
+          select(any_of(nodes_gmdbn))
+        nodes_obs <- evid_nodes %>%
+          select(where(~ !any(is.na(.)))) %>%
+          colnames()
+        nodes_obs <- evid_pred_nodes %>%
+          select(where(~ !any(is.na(.)))) %>%
           colnames() %>%
-          intersect(nodes_obs_evid)
-        blanket <- nodes
-        blanket_miss <- blanket[!(blanket %in% nodes_obs)]
-
-        while (length(blanket_miss) > 0) {
-          child <- arcs %>%
-            filter(from %in% blanket_miss) %>%
-            .$to
-          copar <- arcs %>%
-            filter(to %in% c(blanket_miss, child)) %>%
-            .$from
-          blanket_add <- child %>%
-            c(copar) %>%
-            setdiff(blanket)
-          blanket <- blanket %>%
-            c(blanket_add)
-          blanket_miss <- blanket_add[!(blanket_add %in% nodes_obs)]
-        }
-
+          intersect(nodes_obs)
+        nodes_miss <- evid_nodes %>%
+          select(where(~ all(is.na(.)))) %>%
+          colnames() %>%
+          c(setdiff(nodes_gmdbn, colnames(evid_nodes)))
+        nodes_miss <- evid_pred_nodes %>%
+          select(where(~ all(is.na(.)))) %>%
+          colnames() %>%
+          c(setdiff(nodes_gmdbn, colnames(evid_nodes))) %>%
+          intersect(nodes_miss)
         gmdbn <- gmdbn %>%
-          remove_nodes(setdiff(nodes_gmdbn, blanket))
+          relevant(nodes, nodes_obs, nodes_miss)
         nodes_gmdbn <- gmdbn$b_1 %>%
           names()
         n_nodes_gmdbn <- nodes_gmdbn %>%
           length()
         col_evid_prop <- col_seq %>%
           c(nodes_gmdbn)
-        arcs <- arcs %>%
-          filter(from %in% blanket, to %in% blanket)
       }
 
       col_sub <- prefix %>%
@@ -409,7 +400,10 @@ prediction <- function(gmdbn, evid, evid_pred = NULL, nodes = names(gmdbn$b_1),
         str_c("weight")
       col_prop <- col_seq %>%
         c(col_weight)
-      n_prop <- arcs$lag %>%
+      n_prop <- struct$arcs %>%
+        bind_rows() %>%
+        filter(from %in% nodes_gmdbn, to %in% nodes_gmdbn) %>%
+        .$lag %>%
         max(0) - 1
 
       if (n_prop >= 0) {
