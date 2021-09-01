@@ -1,4 +1,4 @@
-## gmgm (development version)
+## gmgm 1.1.0
 
 * Created function `relevant`, which extracts the minimal sub-Gaussian mixture graphical model required to infer a subset of nodes.
 * Changed the default values of several arguments to increase the speed of learning functions and make them easier to use:
