@@ -2,9 +2,9 @@
 #' estimate the parameters of a conditional Gaussian mixture model
 #'
 #' This function selects the explanatory variables, the number of mixture
-#' components and estimates the parameters a conditional Gaussian mixture model
-#' using a stepwise algorithm. At the first iteration, the SMEM algorithm is
-#' performed to update the number of components and the parameters of the
+#' components and estimates the parameters of a conditional Gaussian mixture
+#' model using a stepwise algorithm. At the first iteration, the SMEM algorithm
+#' is performed to update the number of components and the parameters of the
 #' initial model. Then each following iteration consists in adding or removing a
 #' candidate explanatory variable, before re-estimating the model with the SMEM
 #' algorithm. The selected add or remove operation is the one that maximizes a

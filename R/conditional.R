@@ -1,7 +1,7 @@
-#' Explicit the parameters of a conditional Gaussian mixture model
+#' Conditionalize a Gaussian mixture model
 #'
-#' This function explicits the parameters of a conditional Gaussian mixture
-#' model (Sun \emph{et al.}, 2006).
+#' This function conditionalizes a Gaussian mixture model (Sun \emph{et al.},
+#' 2006).
 #'
 #' @param gmm An object of class \code{gmm}.
 #' @param y A character vector containing the dependent variables (by default

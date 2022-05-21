@@ -62,13 +62,15 @@ are displayed.}
 \value{
 A list with elements:
 \item{gmgm}{The final \code{gmbn} or \code{gmdbn} object.}
-\item{evol_score}{A list with elements:}
-\item{}{\code{global}\verb{  }A numeric vector containing the global score
-before and after learning.}
-\item{}{\code{local}\verb{  }For a \code{gmbn} object, a numeric matrix
-containing the local conditional scores before and after learning. For a
-\code{gmdbn} object, a list of numeric matrices containing these values for
-each \code{gmbn} element.}
+\item{evol_score}{A list with elements:
+\describe{
+\item{\code{global}}{A numeric vector containing the global score before and
+after learning.}
+\item{\code{local}}{For a \code{gmbn} object, a numeric matrix containing the
+local conditional scores before and after learning. For a \code{gmdbn}
+object, a list of numeric matrices containing these values for each
+\code{gmbn} element.}
+}}
 }
 \description{
 This function learns the (graphical and mixture) structure and the parameters

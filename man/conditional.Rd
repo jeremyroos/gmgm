@@ -2,7 +2,7 @@
 % Please edit documentation in R/conditional.R
 \name{conditional}
 \alias{conditional}
-\title{Explicit the parameters of a conditional Gaussian mixture model}
+\title{Conditionalize a Gaussian mixture model}
 \usage{
 conditional(gmm, y = rownames(gmm$mu)[1])
 }
@@ -24,8 +24,8 @@ the dependent variables on the explanatory variables.}
 \item{sigma_c}{A list containing the conditional covariance matrices.}
 }
 \description{
-This function explicits the parameters of a conditional Gaussian mixture
-model (Sun \emph{et al.}, 2006).
+This function conditionalizes a Gaussian mixture model (Sun \emph{et al.},
+2006).
 }
 \examples{
 data(gmm_body)
