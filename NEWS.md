@@ -1,4 +1,4 @@
-## gmgm (development version)
+## gmgm 1.1.1
 
 * Fixed formatting and typing errors in the documentation.
 * Added slightly more details to the main documentation page.
