@@ -3,17 +3,15 @@
 #' This function performs predictive inference in a Gaussian mixture dynamic
 #' Bayesian network. For a sequence of \eqn{T} time slices, this task consists
 #' in defining a time horizon \eqn{h} such that at each time slice \eqn{t}
-#' (for \ifelse{html}{\out{0 &le; <i>t</i> &le; <i>t</i> &minus;
-#' <i>h</i>}}{\eqn{0 \le t \le T - h}}), the state of the system at \eqn{t + h}
-#' is estimated given all the data (the evidence) collected up to \eqn{t}.
-#' Although the states at \ifelse{html}{\out{<i>t</i> + 1, &hellip; ,
-#' <i>t</i> + <i>h</i>}}{\eqn{t + 1, \dots , t + h}} are observed in the future,
-#' some information about them can be known a priori (such as contextual
-#' information or features controlled by the user). This "predicted" evidence
-#' can be taken into account when propagating the particles from \eqn{t} to
-#' \eqn{t + h} in order to improve the predictions. Predictive inference is
-#' performed by sequential importance resampling, which is a particle-based
-#' approximate method (Koller and Friedman, 2009).
+#' (for \eqn{0 \le t \le T - h}), the state of the system at \eqn{t + h} is
+#' estimated given all the data (the evidence) collected up to \eqn{t}. Although
+#' the states at \eqn{t + 1, \dots , t + h} are observed in the future, some
+#' information about them can be known a priori (such as contextual information
+#' or features controlled by the user). This "predicted" evidence can be taken
+#' into account when propagating the particles from \eqn{t} to \eqn{t + h} in
+#' order to improve the predictions. Predictive inference is performed by
+#' sequential importance resampling, which is a particle-based approximate
+#' method (Koller and Friedman, 2009).
 #'
 #' @param gmdbn An object of class \code{gmdbn}.
 #' @param evid A data frame containing the evidence. Its columns must explicitly

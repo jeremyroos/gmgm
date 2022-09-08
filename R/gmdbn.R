@@ -2,47 +2,24 @@
 #'
 #' This function creates a Gaussian mixture dynamic Bayesian network as an
 #' object of S3 class \code{gmdbn}. Assuming that the system evolves over time
-#' (possibly non-stationary) and denoting by
-#' \ifelse{html}{\out{<i>X</i><sup>(<i>t</i>)</sup>}}{\eqn{X^{(t)}}} its state
-#' at time slice \eqn{t}, a dynamic Bayesian network is a probabilistic
-#' graphical model that encodes the joint distribution over any finite time
-#' sequence:
-#' \ifelse{html}{\out{<p style="text-align:center;"><i>p</i>(<i>X</i><sup>(1)</sup>,
-#' &hellip; , <i>X</i><sup>(<i>T</i>)</sup>) = <i>p</i>(<i>X</i><sup>(1)</sup>)
-#' &prod;<sub>2 &le; <i>t</i> &le; <i>T</i></sub>
-#' <i>p</i>(<i>X</i><sup>(<i>t</i>)</sup> | <i>X</i><sup>(<i>t</i> &minus;
-#' 1)</sup>, &hellip; , <i>X</i><sup>(1)</sup>)</p>}}{\deqn{p(X^{(1)}, \dots ,
-#' X^{(T)}) = p(X^{(1)}) \prod_{t = 2}^T p(X^{(t)} | X^{(t - 1)}, \dots ,
-#' X^{(1)})}}
+#' (possibly non-stationary) and denoting by \eqn{X^{(t)}} its state at time
+#' slice \eqn{t}, a dynamic Bayesian network is a probabilistic graphical model
+#' that encodes the joint distribution over any finite time sequence:
+#' \deqn{p(X^{(1)}, \dots , X^{(T)}) = p(X^{(1)})
+#' \prod_{t = 2}^T p(X^{(t)} | X^{(t - 1)}, \dots , X^{(1)})}
 #' It is defined by a sequence of transition models
-#' \ifelse{html}{\out{<i>B</i><sub>1</sub>, <i>B</i><sub>2</sub>, &hellip; ,
-#' <i>B<sub>N</sub></i>}}{\eqn{\mathcal{B}_1, \mathcal{B}_2, \dots ,
-#' \mathcal{B}_N}} associated with transition time slices
-#' \ifelse{html}{\out{<i>t</i><sub>1</sub> = 1 < <i>t</i><sub>2</sub> <
-#' &hellip; < <i>t<sub>N</sub></i>}}{\eqn{t_1 = 1 < t_2 < \dots < t_N}}, where:
+#' \eqn{\mathcal{B}_1, \mathcal{B}_2, \dots , \mathcal{B}_N} associated with
+#' transition time slices \eqn{t_1 = 1 < t_2 < \dots < t_N}, where:
 #' \itemize{
-#' \item \verb{}\ifelse{html}{\out{<i>B</i><sub>1</sub>}}{\eqn{\mathcal{B}_1}}
-#' is a Bayesian network that encodes the distribution
-#' \ifelse{html}{\out{<i>p</i>(<i>X</i><sup>(<i>t</i>)</sup>)}}{\eqn{p(X^{(t)})}}
-#' for \ifelse{html}{\out{1 &le; <i>t</i> &le; <i>t</i><sub>2</sub> &minus;
-#' 1}}{\eqn{1 \le t \le t_2 - 1}}, assuming that the states at these time slices
-#' do not depend on previous states;
-#' \item for each \ifelse{html}{\out{<i>i</i> &ge; 2}}{\eqn{i \ge 2}},
-#' \ifelse{html}{\out{<i>B<sub>i</sub></i>}}{\eqn{\mathcal{B}_i}} is a
-#' (\ifelse{html}{\out{<i>k<sub>i</sub></i> + 1}}{\eqn{k_i + 1}})-slice temporal
-#' Bayesian network (where \ifelse{html}{\out{<i>k<sub>i</sub></i> <
-#' <i>t<sub>i</sub></i>}}{\eqn{k_i < t_i}}) that encodes the transition
-#' distribution \ifelse{html}{\out{<i>p</i>(<i>X</i><sup>(<i>t</i>)</sup> |
-#' <i>X</i><sup>(<i>t</i> &minus; 1)</sup>, &hellip; ,
-#' <i>X</i><sup>(<i>t &minus; k<sub>i</sub></i>)</sup>)}}{\eqn{p(X^{(t)} |
-#' X^{(t - 1)}, \dots , X^{(t - k_i)})}} for
-#' \ifelse{html}{\out{<i>t<sub>i</sub></i> &le; <i>t</i> &le;
-#' <i>t</i><sub><i>i</i> + 1</sub> &minus; 1}}{\eqn{t_i \le t \le t_{i + 1} -
-#' 1}} (or
-#' \ifelse{html}{\out{<i>t</i> &ge; <i>t<sub>i</sub></i>}}{\eqn{t \ge t_i}} if
-#' \eqn{i = N}), assuming that the states at these time slices only depend on
-#' the \ifelse{html}{\out{<i>k<sub>i</sub></i>}}{\eqn{k_i}} previous states
-#' (Hourbracq \emph{et al.}, 2017).
+#' \item \verb{}\eqn{\mathcal{B}_1} is a Bayesian network that encodes the
+#' distribution \eqn{p(X^{(t)})} for \eqn{1 \le t \le t_2 - 1}, assuming that
+#' the states at these time slices do not depend on previous states;
+#' \item for each \eqn{i \ge 2}, \eqn{\mathcal{B}_i} is a (\eqn{k_i + 1})-slice
+#' temporal Bayesian network (where \eqn{k_i < t_i}) that encodes the transition
+#' distribution \eqn{p(X^{(t)} | X^{(t - 1)}, \dots , X^{(t - k_i)})} for
+#' \eqn{t_i \le t \le t_{i + 1} - 1} (or \eqn{t \ge t_i} if \eqn{i = N}),
+#' assuming that the states at these time slices only depend on the \eqn{k_i}
+#' previous states (Hourbracq \emph{et al.}, 2017).
 #' }
 #' In a Gaussian mixture dynamic Bayesian network, these transition models are
 #' Gaussian mixture Bayesian networks (Roos \emph{et al.}, 2017).
@@ -52,11 +29,10 @@
 #' followed by its associated transition time slice (e.g. a transition model
 #' whose transition time slice is 8 is represented by the \code{gmbn} object
 #' \code{b_8}). If the first \code{gmbn} object (chronologically) is associated
-#' with a transition time slice \ifelse{html}{\out{<i>t</i> &ge; 2}}{\eqn{t \ge
-#' 2}} (i.e. \code{b_1} is not specified), it is duplicated to create transition
-#' models associated with \ifelse{html}{\out{1, &hellip; , <i>t</i> &minus;
-#' 1}}{\eqn{1, \dots , t - 1}} (removing the arcs whose time lags exceed the
-#' maximum temporal depths of these models).
+#' with a transition time slice \eqn{t \ge 2} (i.e. \code{b_1} is not
+#' specified), it is duplicated to create transition models associated with
+#' \eqn{1, \dots , t - 1} (removing the arcs whose time lags exceed the maximum
+#' temporal depths of these models).
 #'
 #' @return A list of class \code{gmdbn} containing the \code{gmbn} objects
 #' passed as arguments.

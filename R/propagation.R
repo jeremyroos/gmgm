@@ -7,13 +7,11 @@
 #' renewal step is performed if the effective sample size (ESS) is below a given
 #' threshold (Doucet and Johansen, 2009). This step consists in randomly
 #' selecting new particles among the old ones proportionately to their current
-#' weights. Upon receiving the data (the evidence) of
-#' \ifelse{html}{\out{<i>t</i> + 1}}{\eqn{t + 1}}, each particle is used to
-#' generate samples for the unknown values. Its weight is then updated to the
-#' likelihood for the observed values. The higher this likelihood, the more
-#' likely the particle is selected at the next renewal step for propagation to
-#' \ifelse{html}{\out{<i>t</i> + 2}}{\eqn{t + 2}}, and so on (Koller and
-#' Friedman, 2009).
+#' weights. Upon receiving the data (the evidence) of \eqn{t + 1}, each particle
+#' is used to generate samples for the unknown values. Its weight is then
+#' updated to the likelihood for the observed values. The higher this
+#' likelihood, the more likely the particle is selected at the next renewal step
+#' for propagation to \eqn{t + 2}, and so on (Koller and Friedman, 2009).
 #'
 #' @param part A data frame containing the particles propagated to time slice
 #' \eqn{t}, as obtained from function \code{\link{particles}} or
@@ -24,9 +22,8 @@
 #' particles contain all the samples since the first time slice (this depth is
 #' thus considered as the current time slice).
 #' @param evid A data frame containing the evidence of time slices
-#' \ifelse{html}{\out{<i>t</i> + 1, &hellip; , <i>t</i> + <i>k</i>}}{\eqn{t + 1,
-#' \dots , t + k}}. Its columns must explicitly be named after nodes of
-#' \code{gmgm} and can contain missing values (columns with no value can be
+#' \eqn{t + 1, \dots , t + k}. Its columns must explicitly be named after nodes
+#' of \code{gmgm} and can contain missing values (columns with no value can be
 #' removed). If \code{NULL} (the default), no evidence is taken into account.
 #' @param col_seq A character vector containing the column names of \code{part}
 #' and \code{evid} that describe the observation sequence. If \code{NULL} (the
@@ -44,8 +41,7 @@
 #' at each time slice.
 #'
 #' @return A data frame (tibble) containing the particles supplemented with the
-#' samples of time slices \ifelse{html}{\out{<i>t</i> + 1, &hellip; , <i>t</i> +
-#' <i>k</i>}}{\eqn{t + 1, \dots , t + k}}.
+#' samples of time slices \eqn{t + 1, \dots , t + k}.
 #'
 #' @references
 #' Doucet, A. and Johansen, A. M. (2009). A Tutorial on Particle Filtering and

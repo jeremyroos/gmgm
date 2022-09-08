@@ -2,11 +2,11 @@
 #'
 #' This function performs smoothing inference in a Gaussian mixture dynamic
 #' Bayesian network. For a sequence of \eqn{T} time slices, this task consists
-#' in estimating the state of the system at each time slice \eqn{t}
-#' (for \ifelse{html}{\out{1 &le; <i>t</i> &le; <i>T</i>}}{\eqn{1 \le t \le T}})
-#' given all the data (the evidence) collected up to \eqn{T}. Smoothing
-#' inference is performed by sequential importance resampling, which is a
-#' particle-based approximate method (Koller and Friedman, 2009).
+#' in estimating the state of the system at each time slice \eqn{t} (for
+#' \eqn{1 \le t \le T}) given all the data (the evidence) collected up to
+#' \eqn{T}. Smoothing inference is performed by sequential importance
+#' resampling, which is a particle-based approximate method (Koller and
+#' Friedman, 2009).
 #'
 #' @param gmdbn An object of class \code{gmdbn}.
 #' @param evid A data frame containing the evidence. Its columns must explicitly

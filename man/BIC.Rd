@@ -55,15 +55,9 @@ containing these values for each \code{gmbn} element.}
 \description{
 This function computes the Bayesian Information Criterion (BIC) of a Gaussian
 mixture model or graphical model:
-\ifelse{html}{\out{<p style="text-align:center;"><i>BIC</i> = <i>logLik</i>
-&minus; <sup>log(<i>n<sub>obs</sub></i>)</sup> &frasl; <sub>2</sub>
-<i>n<sub>par</sub></i></p>}}{\deqn{BIC = logLik - \frac{\log(n_{obs})}{2}
-n_{par}}}
-where \eqn{logLik} is the log-likelihood,
-\ifelse{html}{\out{<i>n<sub>obs</sub></i>}}{\eqn{n_{obs}}} the number of
-observations in the data and
-\ifelse{html}{\out{<i>n<sub>par</sub></i>}}{\eqn{n_{par}}} the number of free
-parameters.
+\deqn{BIC = logLik - \frac{\log(n_{obs})}{2} n_{par}}
+where \eqn{logLik} is the log-likelihood, \eqn{n_{obs}} the number of
+observations in the data and \eqn{n_{par}} the number of free parameters.
 }
 \examples{
 data(gmm_body, data_body)

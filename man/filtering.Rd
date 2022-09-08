@@ -62,17 +62,15 @@ containing these values for each time lag.
 \description{
 This function performs filtering inference in a Gaussian mixture dynamic
 Bayesian network. For a sequence of \eqn{T} time slices, this task consists
-in estimating the state of the system at each time slice \eqn{t}
-(for \ifelse{html}{\out{1 &le; <i>t</i> &le; <i>T</i>}}{\eqn{1 \le t \le T}})
-given all the data (the evidence) collected up to \eqn{t}. This
-function is also designed to perform fixed-lag smoothing inference, which
-consists in defining a time lag \eqn{l} such that at each time slice \eqn{t}
-(for \ifelse{html}{\out{<i>l</i> + 1 &le; <i>t</i> &le; <i>T</i>}}{\eqn{l + 1
-\le t \le T}}), the state at \ifelse{html}{\out{<i>t</i> &minus;
-<i>l</i>}}{\eqn{t - l}} is estimated given the evidence collected up to
-\eqn{t} (Murphy, 2002). Filtering and fixed-lag smoothing inference are
-performed by sequential importance resampling, which is a particle-based
-approximate method (Koller and Friedman, 2009).
+in estimating the state of the system at each time slice \eqn{t} (for
+\eqn{1 \le t \le T}) given all the data (the evidence) collected up to
+\eqn{t}. This function is also designed to perform fixed-lag smoothing
+inference, which consists in defining a time lag \eqn{l} such that at each
+time slice \eqn{t} (for \eqn{l + 1 \le t \le T}), the state at \eqn{t - l} is
+estimated given the evidence collected up to \eqn{t} (Murphy, 2002).
+Filtering and fixed-lag smoothing inference are performed by sequential
+importance resampling, which is a particle-based approximate method (Koller
+and Friedman, 2009).
 }
 \examples{
 \donttest{

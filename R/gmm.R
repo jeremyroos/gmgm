@@ -3,26 +3,17 @@
 #' This function creates a Gaussian mixture model as an object of S3 class
 #' \code{gmm}. A Gaussian mixture model is a weighted sum of multivariate
 #' Gaussian distributions:
-#' \ifelse{html}{\out{<p style="text-align:center;"><i>p</i>(<i>x</i>) =
-#' &sum;<sub>1 &le; <i>i</i> &le; <i>M</i></sub> <i>&alpha;<sub>i</sub></i>
-#' &Nscr;(<i>x</i> | <i>&mu;<sub>i</sub></i>,
-#' <i>&Sigma;<sub>i</sub></i>)</p>}}{\deqn{p(x) = \sum_{i = 1}^M \alpha_i
-#' \mathcal{N}(x | \mu_i, \Sigma_i)}}
-#' where \ifelse{html}{\out{<i>&alpha;<sub>i</sub></i>}}{\eqn{\alpha_i}} is the
-#' \eqn{i}th mixture proportion such that
-#' \ifelse{html}{\out{<i>&alpha;<sub>i</sub></i> > 0}}{\eqn{\alpha_i > 0}} and
-#' \ifelse{html}{\out{&sum;<sub>1 &le; <i>i</i> &le; <i>M</i></sub>
-#' <i>&alpha;<sub>i</sub></i> = 1}}{\eqn{\sum_{i = 1}^M \alpha_i = 1}},
-#' \ifelse{html}{\out{<i>&mu;<sub>i</sub></i>}}{\eqn{\mu_i}} the mean vector and
-#' \ifelse{html}{\out{<i>&Sigma;<sub>i</sub></i>}}{\eqn{\Sigma_i}} the
-#' covariance matrix of the \eqn{i}th mixture component (Bilmes, 1998). Since
-#' conditional distributions can be derived from joint distributions, the
-#' \code{gmm} class is also used to work with conditional Gaussian mixture
-#' models (see function \code{\link{conditional}} to explicit their parameters).
-#' Finally, note that a one-component Gaussian mixture model can be created with
-#' function \code{\link{add_var}} (by passing \code{NULL} as argument
-#' \code{gmm}), which allows to quickly initialize a \code{gmm} object that can
-#' be passed to a learning function.
+#' \deqn{p(x) = \sum_{i = 1}^M \alpha_i \mathcal{N}(x | \mu_i, \Sigma_i)}
+#' where \eqn{\alpha_i} is the \eqn{i}th mixture proportion such that
+#' \eqn{\alpha_i > 0} and \eqn{\sum_{i = 1}^M \alpha_i = 1}, \eqn{\mu_i} the
+#' mean vector and \eqn{\Sigma_i} the covariance matrix of the \eqn{i}th mixture
+#' component (Bilmes, 1998). Since conditional distributions can be derived from
+#' joint distributions, the \code{gmm} class is also used to work with
+#' conditional Gaussian mixture models (see function \code{\link{conditional}}
+#' to explicit their parameters). Finally, note that a one-component Gaussian
+#' mixture model can be created with function \code{\link{add_var}} (by passing
+#' \code{NULL} as argument \code{gmm}), which allows to quickly initialize a
+#' \code{gmm} object that can be passed to a learning function.
 #'
 #' @param alpha A positive numeric vector containing the mixture proportions. If
 #' the sum of these proportions is not 1, a normalization is performed by

@@ -1,3 +1,7 @@
+## gmgm (development version)
+
+* Formatted the equations in the documentation to avoid HTML5 validation problems.
+
 ## gmgm 1.1.1
 
 * Fixed formatting and typing errors in the documentation.

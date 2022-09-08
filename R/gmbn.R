@@ -6,31 +6,21 @@
 #' variables by a directed acyclic graph. It encodes a global joint distribution
 #' over the nodes, which decomposes into a product of local conditional
 #' distributions:
-#' \ifelse{html}{\out{<p style="text-align:center;"><i>p</i>(<i>X</i><sub>1</sub>,
-#' &hellip; , <i>X<sub>n</sub></i>) = &prod;<sub>1 &le; <i>i</i> &le;
-#' <i>n</i></sub> <i>p</i>(<i>X<sub>i</sub></i> |
-#' <i>Pa</i>(<i>X<sub>i</sub></i>))</p>}}{\deqn{p(X_1, \dots , X_n) =
-#' \prod_{i = 1}^n p(X_i | Pa(X_i))}}
-#' where \ifelse{html}{\out{<i>Pa</i>(<i>X<sub>i</sub></i>)}}{\eqn{Pa(X_i)}} is
-#' the set of parents of \ifelse{html}{\out{<i>X<sub>i</sub></i>}}{\eqn{X_i}} in
-#' the graph. In a Gaussian mixture Bayesian network, each local joint
-#' distribution over a node and its parents is described by a Gaussian mixture
-#' model, which means that the global distribution is a product of local
-#' conditional Gaussian mixture models (Davies and Moore, 2000). The \code{gmbn}
-#' class can be extended to the time factor by regarding the nodes as the state
-#' of the system at a given time slice \eqn{t} (denoted by
-#' \ifelse{html}{\out{<i>X</i><sup>(<i>t</i>)</sup>}}{\eqn{X^{(t)}}}) and
-#' allowing them to have parents at previous time slices. This makes it possible
-#' to create a (\ifelse{html}{\out{<i>k</i> + 1}}{\eqn{k + 1}})-slice temporal
-#' Bayesian network that encodes the transition distribution
-#' \ifelse{html}{\out{<i>p</i>(<i>X</i><sup>(<i>t</i>)</sup> |
-#' <i>X</i><sup>(<i>t</i> &minus; 1)</sup>, &hellip; , <i>X</i><sup>(<i>t</i>
-#' &minus; <i>k</i>)</sup>)}}{\eqn{p(X^{(t)} | X^{(t - 1)}, \dots ,
-#' X^{(t - k)})}} (Hulst, 2006). Finally, note that a Gaussian mixture Bayesian
-#' network can be created with functions \code{\link{add_nodes}} (by passing
-#' \code{NULL} as argument \code{gmgm}) and \code{\link{add_arcs}}, which allows
-#' to quickly initialize a \code{gmbn} object that can be passed to a learning
-#' function.
+#' \deqn{p(X_1, \dots , X_n) = \prod_{i = 1}^n p(X_i | Pa(X_i))}
+#' where \eqn{Pa(X_i)} is the set of parents of \eqn{X_i} in the graph. In a
+#' Gaussian mixture Bayesian network, each local joint distribution over a node
+#' and its parents is described by a Gaussian mixture model, which means that
+#' the global distribution is a product of local conditional Gaussian mixture
+#' models (Davies and Moore, 2000). The \code{gmbn} class can be extended to the
+#' time factor by regarding the nodes as the state of the system at a given time
+#' slice \eqn{t} (denoted by \eqn{X^{(t)}}) and allowing them to have parents at
+#' previous time slices. This makes it possible to create a (\eqn{k + 1})-slice
+#' temporal Bayesian network that encodes the transition distribution
+#' \eqn{p(X^{(t)} | X^{(t - 1)}, \dots , X^{(t - k)})} (Hulst, 2006). Finally,
+#' note that a Gaussian mixture Bayesian network can be created with functions
+#' \code{\link{add_nodes}} (by passing \code{NULL} as argument \code{gmgm}) and
+#' \code{\link{add_arcs}}, which allows to quickly initialize a \code{gmbn}
+#' object that can be passed to a learning function.
 #'
 #' @param \dots Objects of class \code{gmm} describing the local joint
 #' distributions over the nodes and their parents. Each \code{gmm} object must
@@ -40,8 +30,8 @@
 #' nodes at previous time slices (if the created \code{gmbn} object is a
 #' temporal Bayesian network). In the second case, the time lag must be added at
 #' the end of the variable name after a period \code{.} (e.g. the instantiation
-#' of a node \code{X} at time slice \ifelse{html}{\out{<i>t</i> &minus;
-#' 1}}{\eqn{t - 1}} is represented by the variable \code{X.1}).
+#' of a node \code{X} at time slice \eqn{t - 1} is represented by the variable
+#' \code{X.1}).
 #'
 #' @return A list of class \code{gmbn} containing the \code{gmm} objects passed
 #' as arguments.

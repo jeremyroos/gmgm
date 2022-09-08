@@ -12,9 +12,9 @@
 #' \item \code{DATE}: day's date;
 #' \item \code{HOUR}: hour of the day;
 #' \item \code{NO2}: nitrogen dioxide concentration
-#' (\ifelse{html}{\out{&mu;g/m<sup>3</sup>}}{µg/m\eqn{^3}});
+#' (\ifelse{html}{\out{&mu;g/m&sup3;}}{µg/m³});
 #' \item \code{O3}: ozone concentration
-#' (\ifelse{html}{\out{&mu;g/m<sup>3</sup>}}{µg/m\eqn{^3}});
+#' (\ifelse{html}{\out{&mu;g/m&sup3;}}{µg/m³});
 #' \item \code{TEMP}: temperature (\ifelse{html}{\out{&deg;C}}{°C});
 #' \item \code{WIND}: wind speed (m/s).
 #' }

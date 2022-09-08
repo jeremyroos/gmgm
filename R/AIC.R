@@ -3,10 +3,8 @@
 #'
 #' This function computes the Akaike Information Criterion (AIC) of a Gaussian
 #' mixture model or graphical model:
-#' \ifelse{html}{\out{<p style="text-align:center;"><i>AIC</i> = <i>logLik</i>
-#' &minus; <i>n<sub>par</sub></i></p>}}{\deqn{AIC = logLik - n_{par}}}
-#' where \eqn{logLik} is the log-likelihood and
-#' \ifelse{html}{\out{<i>n<sub>par</sub></i>}}{\eqn{n_{par}}} the number of free
+#' \deqn{AIC = logLik - n_{par}}
+#' where \eqn{logLik} is the log-likelihood and \eqn{n_{par}} the number of free
 #' parameters.
 #'
 #' @param object An object of class \code{gmm}, \code{gmbn} or \code{gmdbn}.

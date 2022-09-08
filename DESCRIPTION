@@ -1,7 +1,7 @@
 Package: gmgm
 Type: Package
 Title: Gaussian Mixture Graphical Model Learning and Inference
-Version: 1.1.1
+Version: 1.1.1.9000
 Authors@R: c(
     person("Jérémy", "Roos", email = "jeremy.roos@gmail.com",
     role = c("aut", "cre", "cph")),
@@ -22,4 +22,4 @@ Suggests: testthat (>= 2.3.2)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
