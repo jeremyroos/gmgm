@@ -135,12 +135,12 @@ smem <- function(gmm, data, y = NULL, score = "bic", split = TRUE, merge = TRUE,
       stop()
   }
 
-  if (!between(min_comp, 1, max_comp)) {
+  if (min_comp < 1 || min_comp > max_comp) {
     "min_comp is not in [1, max_comp]" %>%
       stop()
   }
 
-  if (!between(length(gmm$alpha), min_comp, max_comp)) {
+  if (length(gmm$alpha) < min_comp || length(gmm$alpha) > max_comp) {
     "the number of components of gmm is not in [min_comp, max_comp]" %>%
       stop()
   }
