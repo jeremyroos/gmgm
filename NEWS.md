@@ -1,4 +1,4 @@
-## gmgm (development version)
+## gmgm 1.1.3
 
 * Updated URLs in the documentation that were no longer working.
 * Added `.data$id` to avoid NSE notes with recent dplyr versions.
