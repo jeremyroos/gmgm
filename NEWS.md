@@ -1,3 +1,7 @@
+## gmgm (development version)
+
+* Added `.data$id` to avoid NSE notes with recent dplyr versions.
+
 ## gmgm 1.1.2
 
 * Formatted the equations in the documentation to avoid HTML5 validation problems.

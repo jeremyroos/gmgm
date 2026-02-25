@@ -41,7 +41,7 @@ network <- function(gmbn) {
     distinct(id = from) %>%
     mutate(group = "past") %>%
     bind_rows(tibble(id = nodes, group = "present")) %>%
-    mutate(label = id) %>%
+    mutate(label = .data$id) %>%
     visNetwork(arcs) %>%
     visNodes(shape = "ellipse", font = list(color = "black")) %>%
     visGroups(groupname = "present",
