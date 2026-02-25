@@ -13,7 +13,7 @@ Description: Gaussian mixture graphical models include Bayesian networks and
     between continuous variables. This package provides a complete framework to
     create, manipulate, learn the structure and the parameters, and perform
     inference in these models. Most of the algorithms are described in the PhD
-    thesis of Roos (2018) <https://tel.archives-ouvertes.fr/tel-01943718>.
+    thesis of Roos (2018) <https://theses.hal.science/tel-01943718>.
 Depends: R (>= 3.5.0)
 Imports: dplyr (>= 1.0.5), ggplot2 (>= 3.2.1), purrr (>= 0.3.3),
     rlang (>= 0.4.10), stats (>= 3.5.0), stringr (>= 1.4.0), tidyr (>= 1.0.0),

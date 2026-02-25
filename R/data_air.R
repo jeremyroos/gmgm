@@ -4,7 +4,7 @@
 #' Dongsi air quality monitoring site in Beijing (China) for 320 complete days
 #' of the year 2015. These data are taken from the Beijing Multi-Site Air
 #' Quality Dataset published in the UCI Machine Learning Repository:
-#' \url{https://archive.ics.uci.edu/ml/datasets/Beijing+Multi-Site+Air-Quality+Data}
+#' \url{https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data}
 #' (Zhang \emph{et al.}, 2017).
 #'
 #' @format A data frame (tibble) with 7680 rows and 6 columns:
