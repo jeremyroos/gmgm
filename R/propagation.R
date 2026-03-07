@@ -270,7 +270,7 @@ propagation <- function(part, gmgm, evid = NULL, col_seq = NULL,
         stop()
     }
 
-    if (!between(min_ess, 0, 1)) {
+    if (min_ess < 0 || min_ess > 1) {
       "min_ess is not in [0, 1]" %>%
         stop()
     }

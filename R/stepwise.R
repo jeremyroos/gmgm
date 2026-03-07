@@ -138,7 +138,7 @@ stepwise <- function(gmm, data, y = rownames(gmm$mu)[1],
       stop()
   }
 
-  if (!between(min_x, 0, max_x)) {
+  if (min_x < 0 || min_x > max_x) {
     "min_x is not in [0, max_x]" %>%
       stop()
   }
@@ -149,7 +149,7 @@ stepwise <- function(gmm, data, y = rownames(gmm$mu)[1],
   n_x <- mu %>%
     nrow() - length(y)
 
-  if (!between(n_x, min_x, max_x)) {
+  if (n_x < min_x || n_x > max_x) {
     "the number of explanatory variables of gmm is not in [min_x, max_x]" %>%
       stop()
   }
